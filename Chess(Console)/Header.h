@@ -4,8 +4,6 @@
 #include <vector>
 #include <string>
 #include <fstream>
-#include <chrono>
-#include <functional>
 
 #include <fcntl.h>
 #include <io.h>
@@ -61,32 +59,6 @@ constexpr auto MAKE_BOARD(void) {
 	return grid;
 }
 
-class Timer {
-	std::chrono::time_point<std::chrono::steady_clock> start;
-public:
-	Timer() : start{std::chrono::steady_clock::now()} {}
-
-	Timer(const Timer&) = delete;
-
-	Timer operator = (const Timer&) = delete;
-
-	~Timer() {
-		wcout << L"\nTimer : " << static_cast<std::chrono::duration<float>>(std::chrono::steady_clock::now() - start).count() * 1000 << "ms\n";
-	}
-
-	std::chrono::duration<float> get() {
-		return std::chrono::steady_clock::now() - start;
-	}//sec
-
-	operator std::chrono::duration<float>() const {
-		return std::chrono::steady_clock::now() - start;
-	}
-
-	void Lap() {
-		wcout << L"\nLap : " << static_cast<std::chrono::duration<float>>(std::chrono::steady_clock::now() - start).count() * 1000 << "ms\n";
-	}
-};
-
 //Coord {y, x};
 struct Coord {
 	int y;
@@ -99,7 +71,6 @@ struct Coord {
 //get distance btween
 int dist(const int fir, const int sec);
 
-//void Refresh(wstring& map);
 
 class Player {
 protected:

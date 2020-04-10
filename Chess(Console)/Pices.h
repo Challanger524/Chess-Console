@@ -32,7 +32,7 @@ class EnPawn : public Pawn {
 public:
 	EnPawn() = delete;
 
-	const bool virtual Rule(const Coord from[[maybe_unused]], const Coord to[[maybe_unused]], const grid_t &grid[[maybe_unused]]) override { return false; }
+	const bool virtual Rule(const Coord from[[maybe_unused]], const Coord to[[maybe_unused]], const grid_t &grid[[maybe_unused]]) override final{ return false; }
 
 	EnPawn(const wchar_t side) {
 		assert((side == L'W' || side == L'B') && L"Invalid color of EnPawn");
@@ -66,20 +66,16 @@ class Queen : public ChessPice {
 public:
 	Queen() { name = L'Q'; }
 
-	const bool virtual Rule(const Coord from, const Coord to, const grid_t &grid) override = 0;
+	const bool virtual Rule(const Coord from, const Coord to, const grid_t &grid) override final;
 };
 
 class WQueen : public Queen {
 public:
 	WQueen() { color = L'W'; }
-
-	const bool virtual Rule(const Coord from, const Coord to, const grid_t &grid) override final { return Queen::Rule(from, to, grid); }
 };
 class BQueen : public Queen {
 public:
 	BQueen() { color = L'B'; }
-
-	const bool virtual Rule(const Coord from, const Coord to, const grid_t &grid) override final { return Queen::Rule(from, to, grid); }
 };
 
 
@@ -92,20 +88,16 @@ public:
 	const bool IfMoved() { return moved; }
 	void YesMoved() { moved = true; }
 
-	const bool virtual Rule(const Coord from, const Coord to, const grid_t &grid) override = 0;
+	const bool virtual Rule(const Coord from, const Coord to, const grid_t &grid) override final;
 };
 
 class WKing : public King {
 public:
 	WKing() { color = L'W'; }
-
-	const bool virtual Rule(const Coord from, const Coord to, const grid_t &grid) override final { return King::Rule(from, to, grid); }
 };
 class BKing : public King {
 public:
 	BKing() { color = L'B'; }
-
-	const bool virtual Rule(const Coord from, const Coord to, const grid_t &grid) override final { return King::Rule(from, to, grid); }
 };
 
 
@@ -117,18 +109,48 @@ public:
 	const bool IfMoved() { return moved; }
 	void YesMoved() { moved = true; }
 
-	const bool virtual Rule(const Coord from, const Coord to, const grid_t &grid) override = 0;
+	const bool virtual Rule(const Coord from, const Coord to, const grid_t &grid) override final;
 };
 
 class WRook : public Rook {
 public:
 	WRook() { color = L'W'; }
-
-	const bool virtual Rule(const Coord from, const Coord to, const grid_t &grid) override final { return Rook::Rule(from, to, grid); }
 };
 class BRook : public Rook {
 public:
 	BRook() { color = L'B'; }
+};
 
-	const bool virtual Rule(const Coord from, const Coord to, const grid_t &grid) override final { return Rook::Rule(from, to, grid); }
+
+class Bishop : public ChessPice {
+public :
+	Bishop() { name = L'B'; }
+
+	const bool virtual Rule(const Coord from, const Coord to, const grid_t &grid) override final;
+};
+
+class WBishop : public Bishop {
+public:
+	WBishop() { color = L'W'; }
+};
+class BBishop : public Bishop {
+public:
+	BBishop() { color = L'B'; }
+};
+
+
+class kNight : public ChessPice {
+public:
+	kNight() { name = L'N'; }
+
+	const bool virtual Rule(const Coord from, const Coord to, const grid_t &grid) override final;
+};
+
+class WkNight : public kNight {
+public:
+	WkNight() { color = L'W'; }
+};
+class BkNight : public kNight {
+public:
+	BkNight() { color = L'B'; }
 };

@@ -51,7 +51,6 @@ bool Desk::IfEnPassant(const Coord from, const Coord to)
 	return enpass;
 }
 
-
 void Desk::ErasePice(const Coord pos) {
 	assert(pos.x >= 0 && pos.y >= 0 && L"Coord must be positive");
 	assert(pos.x < 9 && pos.y < 9 && L"Coord must be less then 9");
@@ -87,24 +86,29 @@ bool Desk::Move(const Coord from, const Coord to)
 
 		PreciseUpdate(from, to);
 		PreciseUpdate(intercepted, intercepted);//for intercepted's cell painting
+
 		return true;
 	}
-	else if (grid[from.y][from.x]->GetName() == L'P' && to.y == 0 || to.y == 7)//if Pawn gets promotion.
+	else if (grid[from.y][from.x]->GetName() == L'P' && (to.y == 0 || to.y == 7))//if Pawn gets promotion.
 	{
-		switch (GetInput()) {
-			/*case L'1':
-				if (grid[from.y][from.x]->GetColr() == L'W') SetPice(to, new WkNight);
-				else SetPice(to, new BkNight);
-				break;*/
+		switch (GetInput())
+		{
+		case L'1':
+			if (grid[from.y][from.x]->GetColr() == L'W') SetPice(to, new WkNight);
+			else SetPice(to, new BkNight);
+			break;
+
 		case L'2':
 			if (grid[from.y][from.x]->GetColr() == L'W') SetPice(to, new WRook);
 			else SetPice(to, new BRook);
 			break;
-			/*case L'3':
+
+		case L'3':
 			if (grid[from.y][from.x]->GetColr() == L'W') SetPice(to, new WBishop);
 			else SetPice(to, new BBishop);
-			break;*/
-		default:
+			break;
+
+		default://Queen
 			if (grid[from.y][from.x]->GetColr() == L'W') SetPice(to, new WQueen);
 			else SetPice(to, new BQueen);
 			break;
@@ -113,11 +117,48 @@ bool Desk::Move(const Coord from, const Coord to)
 		ErasePice(from);
 		PreciseUpdate(from, to);
 	}
-	else if(grid[from.y][from.x]->GetName() == L'K' && dist(from.x, to.x) == 2 && from.y == to.y)//if castling
+	else if (grid[from.y][from.x]->GetName() == L'K')
 	{
+		if (dist(from.x, to.x) == 2)//if castling
+		{
+			Coord rook_from, rook_to;
 
+			static_cast<King*>(grid[from.y][from.x])->YesMoved();
+			SetPice(to, grid[from.y][from.x]);//move the King
+			grid[from.y][from.x] = nullptr;
+
+			//define Rook's movement
+			if (from.x < to.x) {
+				rook_from = Coord{from.y, 7};
+				rook_to = Coord{from.y, to.x - 1};
+			}
+			else {
+				rook_from = Coord{from.y, 0};
+				rook_to = Coord{from.y, to.x + 1};
+			}
+
+			//move the Rook
+			static_cast<Rook*>(grid[rook_from.y][rook_from.x])->YesMoved();
+			SetPice(rook_to, grid[rook_from.y][rook_from.x]);
+			grid[rook_from.y][rook_from.x] = nullptr;
+			PreciseUpdate(rook_from, rook_to);
+		}
+		else {//King just moves
+			static_cast<King*>(grid[from.y][from.x])->YesMoved();
+			SetPice(to, grid[from.y][from.x]);
+			grid[from.y][from.x] = nullptr;
+		}
+
+		PreciseUpdate(from, to);
+
+		if (grid[to.y][to.x]->GetColr() == L'W') wking = Coord(to);
+		else bking = Coord(to);
 	}
-	else {//default situation
+	else //default situation
+	{
+		if (grid[from.y][from.x]->GetName() == L'R') //if Rook moves
+			static_cast<Rook*>(grid[from.y][from.x])->YesMoved();
+
 		SetPice(to, grid[from.y][from.x]);
 		grid[from.y][from.x] = nullptr;
 
@@ -175,21 +216,36 @@ void Desk::Clear()
 
 void Desk::DefaultPlacement()
 {
-	for (size_t i = 0; i < CELLS; i++) grid[1][i] = new WPawn;
+	for (size_t i = 0; i < CELLS; i++)
+		grid[1][i] = new WPawn;
+
 	grid[0][0] = new WRook;
 	grid[0][7] = new WRook;
 
+	grid[0][3] = new WQueen;
 	grid[0][4] = new WKing;
 
+	grid[0][2] = new WBishop;
+	grid[0][5] = new WBishop;
 
-	
-	for (size_t i = 0; i < CELLS; i++) grid[6][i] = new BPawn;
+	grid[0][1] = new WkNight;
+	grid[0][6] = new WkNight;
+
+
+	for (size_t i = 0; i < CELLS; i++) 
+		grid[6][i] = new BPawn;
+
 	grid[7][0] = new BRook;
 	grid[7][7] = new BRook;
 
-	//grid[0][7] = new WRook;
+	grid[7][4] = new BKing;
+	grid[7][3] = new BQueen;
 
-	//grid[0][7] = new WRook;
+	grid[7][2] = new BBishop;
+	grid[7][5] = new BBishop;
+
+	grid[7][1] = new BkNight;
+	grid[7][6] = new BkNight;
 }
 
 void Desk::Restart() {
@@ -198,3 +254,9 @@ void Desk::Restart() {
 	Refresh();
 }
 
+const bool Desk::Save() {
+	
+}
+bool Desk::Load() {
+
+}

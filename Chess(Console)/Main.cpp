@@ -6,16 +6,12 @@ void GameLoop();
 
 int main()
 {
-	Timer t;
-
 	_setmode(_fileno(stdout), _O_U8TEXT);//make console work with Unicode.
 	cin.sync_with_stdio(false);
 	wcout.precision(2);
 
 	GameLoop();
 
-	wcout << L"Exiting (operating time: " <<
-		static_cast<std::chrono::duration<float>>(t.get()).count() << "sec)\n";
 	system("pause");
 	return 0;
 }
@@ -32,11 +28,11 @@ void GameLoop()
 	//Refresh(map);
 
 	//wcout << map << endl;
-
-	wcout << L"The Chess Game\n";
+	swap(current, waiting);
+	/*wcout << L"The Chess Game\n";
 	wcout << L"Message: Type theese commands for interaction:\n";
 	PrintHelp();
-
+*/
 	while (loop) {
 		board.Print();
 

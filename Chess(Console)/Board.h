@@ -8,17 +8,16 @@ class Desk {
 	Coord en_passant{-1,-1};
 	Coord bking, wking;
 
+private:
+
 	void DefaultPlacement();
 
-	void PreciseUpdate(const Coord from, const Coord to);
+	void PreciseUpdate(const Coord from, const Coord to);//of the map
 
 	bool IfEnPassant(const Coord from, const Coord to);
 
 	unsigned short GetInput();
-
-public:
-	const auto& Layout() { return grid; } //consttt!!!
-	const auto& Mapout() { return map; }
+public://main logic
 
 	void ErasePice(const Coord pos);
 	void SetPice(const Coord pos, ChessPice *pice);
@@ -26,7 +25,14 @@ public:
 
 	const bool Check();//
 	const bool Checkmate();//
+public:
 
+	const bool Save();//
+	bool Load();//
+
+	const auto& Layout() { return grid; }
+	const auto& Mapout() { return map; }
+	
 	const void Print();
 
 	void Clear();

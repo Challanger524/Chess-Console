@@ -1,7 +1,7 @@
 #include "UInterface.h"
 //#include "Logic.h"
 
-int Dispatch(wstring &input) {
+const int Dispatch(wstring input) {
 	for (size_t i = 0; i < input.size(); i++)//erase 'spacebars'
 		if (input[i] == L' ')
 			while (i < input.size() && input[i] == L' ')
@@ -9,6 +9,8 @@ int Dispatch(wstring &input) {
 
 	if (input == L"start" || input == L"play") return Start;
 	if (input == L"restart") return Restart;
+	if (input == L"save") return Save;
+	if (input == L"load") return Load;
 	if (input == L"exit") return Exit;
 	if (input == L"help") return Help;
 
