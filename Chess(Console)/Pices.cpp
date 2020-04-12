@@ -151,6 +151,7 @@ const bool kNight::Rule(const Coord from, const Coord to, const grid_t &grid)
 }
 
 
+//attention to the position -1 -1. It must appear as late as possible(as return position)(validates as 'false').
 Coord Walker::GoKing(const Coord pos) {
 	static int it = 0;
 	Coord move{-1,-1};
@@ -246,12 +247,12 @@ Coord Walker::GoRook(const Coord pos) {
 	return move;
 }
 Coord Walker::GoBishop(const Coord pos) {
-	static int S = 7;//slash
+	static int S = 7;//slash // '+7' be careful here!
 	static int B = -7;//back slash
 	Coord move{-1,-1};
 
 	if (!pos) {
-		S = -7;
+		S = 7;
 		B = -7;
 	}
 	else if (B < 8) {
@@ -263,7 +264,7 @@ Coord Walker::GoBishop(const Coord pos) {
 		S--;
 	}
 	else {//variations end
-		S = -7;
+		S = 7;
 		B = -7;
 	}
 

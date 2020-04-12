@@ -37,6 +37,14 @@ bool Desk::IfEnPassant(const Coord from, const Coord to)
 	}
 
 	if (enpass) {//if EnPassant can occur - leve a mark
+
+		if (en_passant) {//if second enp in row after expired first
+			if (grid[en_passant.y][en_passant.x]->GetName() == L'p') {
+				ErasePice(en_passant);
+				PreciseUpdate(en_passant, en_passant);
+			}
+		}
+
 		en_passant = Coord{(from.y + to.y) / 2, from.x};
 
 		SetPice(to, grid[from.y][from.x]);
@@ -77,25 +85,33 @@ void Desk::SetPice(const Coord pos, ChessPice *pice) {
 
 bool Desk::Move(const Coord from, const Coord to)
 {
+	assert(grid[from.y][from.x] != nullptr);
+
+	if (Stalemate(grid[from.y][from.x]->GetColr())) {//if Stalemate
+		if (grid[from.y][from.x]->GetColr() == L'W') {
+			if (Stalemate(L'B')) wcout << L"Both teams suffering Stalemate\n";
+		}
+		else if (Stalemate(L'W')) wcout << L"Both teams suffering Stalemate\n";
+		else wcout << L"You are under a Stalemate\n";
+
+		return false;
+	}	
+
 	if (!grid[from.y][from.x]->Rule(from, to, grid)) return false;//rule violation check
-	//if (Stalemate()) {//if you are under a Stalemate
-	//	wcout << L"You are under a Stalemate\n";
-	//	return false;
-	//}
-	if (Check(from, to, grid)) {//if you are under a Check
-		wcout << L"You will be under a Check\n";
+
+	if (Check(from, to, grid)) {//if this move will put you under a Check(or wont put out of)
+		wcout << L"You are under a Check\n";
 		return false;
 	}
-	//if you are under a Check/CheckMate/!!Pate!!
 
-	if (grid[from.y][from.x]->GetColr() == L'W' && wking) {
+	if (grid[from.y][from.x]->GetColr() == L'W' && wking) {//if CheckMate
 		if (Checkmate(wking)) {
-			wcout << L"You are under a CheckMate, Black won!\n";
+			wcout << L"CheckMate, Black won!\n";
 			return false;
 		}
 	}
 	else if (bking) if (Checkmate(bking)) {
-		wcout << L"You are under a CheckMate, White won!\n";
+		wcout << L"CheckMate, White won!\n";
 		return false;
 	}
 
@@ -116,7 +132,7 @@ bool Desk::Move(const Coord from, const Coord to)
 	}
 	else if (grid[from.y][from.x]->GetName() == L'P' && (to.y == 0 || to.y == 7))//if Pawn gets promotion.
 	{
-		switch (GetInput())
+		switch (GetInput())//!! > INPUT from user !!
 		{
 		case L'1':
 			if (grid[from.y][from.x]->GetColr() == L'W') SetPice(to, new WkNight);
@@ -179,7 +195,7 @@ bool Desk::Move(const Coord from, const Coord to)
 		if (grid[to.y][to.x]->GetColr() == L'W') wking = Coord(to);
 		else bking = Coord(to);
 	}
-	else //default situation
+	else//default move
 	{
 		if (grid[from.y][from.x]->GetName() == L'R') //if Rook moves
 			static_cast<Rook*>(grid[from.y][from.x])->YesMoved();
@@ -503,11 +519,9 @@ const bool Desk::Checkmate(const Coord king)
 	return true;
 }
 
-const bool Desk::Stalemate(const Coord from)
+const bool Desk::Stalemate(const wchar_t side)
 {
-	assert(grid[from.y][from.x] != nullptr);
-
-	wchar_t side = grid[from.y][from.x]->GetColr();
+	assert(side == L'W' || side == L'B');
 
 	for (int y = 0; y < 8; y++)
 		for (int x = 0; x < 8; x++)

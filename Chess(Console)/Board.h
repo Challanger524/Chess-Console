@@ -25,7 +25,7 @@ public://main logic
 
 	const bool Check(const Coord from, const Coord to, const grid_t ngrid);
 	const bool Checkmate(const Coord king);//Hooray!
-	const bool Stalemate(const Coord from);//
+	const bool Stalemate(const wchar_t side);
 public:
 
 	const bool Save();
@@ -43,5 +43,4 @@ public:
 
 public:
 	Desk() : map(MAKE_BOARD().data()) {}
-	//Desk(const Desk&) = delete;
 };

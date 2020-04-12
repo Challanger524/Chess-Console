@@ -69,7 +69,7 @@ struct Coord {
 	operator bool() const { return x != -1 || y != -1; }
 };
 
-//get distance btween
+//get distance between args
 int dist(const int fir, const int sec);
 
 
@@ -84,13 +84,13 @@ public:
 class WPlayer : public Player {
 public:
 	WPlayer() { side = L'W'; }
-	void Turn() override { wcout << L"White turn: "; }
+	void Turn() override { wcout << L"White turn > "; }
 };
 
 class BPlayer : public Player {
 public:
 	BPlayer() { side = L'B'; }
-	void Turn() override { wcout << L"Black turn: "; }
+	void Turn() override { wcout << L"Black turn > "; }
 };
 
-void swap(Player * const &lhs, Player * const &rhs);
+void swap(const Player * const &lhs,const Player * const &rhs);

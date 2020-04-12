@@ -166,7 +166,7 @@ namespace UnitTest_for_Chess
 			board.SetPice(Coord{0,0}, new WBishop);
 
 			board.Refresh();
-			//Logger::WriteMessage(board.Mapout().c_str());
+			Logger::WriteMessage(board.Mapout().c_str());
 
 			Assert::IsTrue(board.Move(Coord{0,0}, Coord{5,5}), L"Just move");
 			Assert::IsTrue(board.Move(Coord{5,5}, Coord{4,6}), L"Just move");
@@ -174,7 +174,6 @@ namespace UnitTest_for_Chess
 			Assert::IsFalse(board.Move(Coord{4,6}, Coord{3,4}), L"Just wrong move ");
 
 			//Logger::WriteMessage(board.Mapout().c_str());
-
 		}
 
 		TEST_METHOD(Front_Enemy)
@@ -370,7 +369,7 @@ namespace UnitTest_for_Chess
 		}
 	};
 
-	//need update
+	//need update, maybe
 	TEST_CLASS(Promotion_Mechanics)//reqires input from the user(originally)
 	{
 		wstring map = MAKE_BOARD().data();
@@ -378,15 +377,13 @@ namespace UnitTest_for_Chess
 		Coord en_passant{-1,-1};
 		Coord bking, wking;
 
-		unsigned short GetInput() {
+		unsigned short GetInput() {//fake input
 			//wcout << L"Promotion: which pice do you choose:\n"
 			//	"0 - Queen";
 			return L'b';//  <-- L'<for change>'
 		}
 		void PreciseUpdate(const Coord from, const Coord to)
 		{
-			//assert((from != to && grid[to.y][to.x] != nullptr) && L"cell for pice write must not be empty");
-
 			size_t cell = (FIRST_CELL_Y + from.y * 2) * WIDTH + FIRST_CELL_X + from.x * 3;//Update 'from' cell
 			if ((from.x + from.y) % 2 == 0) { //if cell should be painted - paint
 				map[cell] = L'█';
@@ -801,11 +798,10 @@ namespace UnitTest_for_Chess
 			board.Refresh();
 			Logger::WriteMessage(board.Mapout().c_str());
 
-			Assert::IsTrue(board.Stalemate(Coord{1,2}), L"White are under a stalemate");
+			Assert::IsTrue(board.Stalemate(L'W'), L"White are under a stalemate");
 
-			Assert::IsTrue(board.Stalemate(Coord{2,2}), L"Black are under a stalemate");
+			Assert::IsTrue(board.Stalemate(L'B'), L"Black are under a stalemate");
 
 		}
 	};
-
 }

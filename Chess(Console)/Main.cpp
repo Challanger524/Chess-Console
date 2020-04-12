@@ -12,7 +12,7 @@ int main()
 
 	GameLoop();
 
-	system("pause");
+	//system("pause");
 	return 0;
 }
 
@@ -25,28 +25,20 @@ void GameLoop()
 	bool loop = true;
 	bool on_game = false;
 
-	//Refresh(map);
 
-	//wcout << map << endl;
-	swap(current, waiting);
-	/*wcout << L"The Chess Game\n";
+	wcout << L"The Chess Game\n";
 	wcout << L"Message: Type theese commands for interaction:\n";
-	PrintHelp();
-	*/
+	PrintHelp();	
 
 	while (loop) {
 		board.Print();
 
-		if (on_game) {			
-			current->Turn();
-		}
-		else {
-			wcout << L"> ";
-		}
+		if (on_game) current->Turn();
+		else wcout << L"> ";
 
 		getline(wcin, input);
-		switch (Dispatch(input))
-		{
+		switch (Dispatch(input)) {
+
 		case Help:
 			system("cls");
 			PrintHelp();
@@ -58,65 +50,69 @@ void GameLoop()
 			on_game = true;
 			break;
 
-		case Restart://
+		case Restart:
 			if (!on_game) break;
 			board.Restart();
 			on_game = true;
 			break;
 
 		case Empty:
-			wcout << L"Empty input, try again.\n";
+			wcout << L"Empty input\n";
 			system("pause");
 			break;
 
 		case Invalid:
-			wcout << L"Invalid input, try again.\n";
+			wcout << L"Invalid input\n";
 			system("pause");
 			break;
 
-		case Save://
-			//if (!on_game) break;
+		case Save:
+			if (!on_game) break;
 			if (!board.Save()) {
 				wcout << L"Saving failed\n";
 				system("pause");
 			}
 			break;
 
-		case Load://
+		case Load:
 			if (!board.Load()) {
 				board.ClearBoard();
 				wcout << L"Loading failed\n";
 				system("pause");
 			}
+			else on_game = true;
+
 			break;
 
 		case Exit:
-			//system("cls");
 			loop = false;
 			break;
 
 		default:
 		{
 			if (!CorrectMoveReq(input)) {
-				wcout << L"Message: Incorrect input, try again.\n";
+				wcout << L"Message: Incorrect input syntax, try again.\n";
 				system("pause");
 			}
-			else {
+			else
+			{
 				Coord from{input[1] - L'1',input[0] - L'a'};
 				Coord to{input[3] - L'1', input[2] - L'a'};
 
 				if (board.Layout()[from.y][from.x] == nullptr) wcout << L"You choosed no pice\n";
-				//else if (current->GetSide() != board.Layout()[from.y][from.x]->GetColr()) wcout << L"You tried to move your oponent's pice\n";
+				else if (current->GetSide() != board.Layout()[from.y][from.x]->GetColr()) wcout << L"You tried to move your oponent's pice\n";
 				else if (board.Layout()[to.y][to.x] != nullptr && current->GetSide() == board.Layout()[to.y][to.x]->GetColr()) wcout << L"You tried to move onto your own pice\n";
-				else {
+				else
+				{
 					if (board.Move(from, to)) {
-						//swap(current, waiting);
-						continue;
+						swap(current, waiting);
+						continue;//to avoid pausing
 					}
-					else wcout << L"Invalid move for the '" << board.Layout()[from.y][from.x]->GetName() << "', try again\n";
+					else wcout << L"Invalid move for the '" << board.Layout()[from.y][from.x]->GetName() << "\n";
 				}
 				system("pause");
 			}
+
 			break;
 		}
 		}
