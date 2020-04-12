@@ -4,8 +4,7 @@
 const int Dispatch(wstring input) {
 	for (size_t i = 0; i < input.size(); i++)//erase 'spacebars'
 		if (input[i] == L' ')
-			while (i < input.size() && input[i] == L' ')
-				input.erase(i, 1);
+			while (i < input.size() && input[i] == L' ')	input.erase(i, 1);
 
 	if (input == L"start" || input == L"play") return Start;
 	if (input == L"restart") return Restart;

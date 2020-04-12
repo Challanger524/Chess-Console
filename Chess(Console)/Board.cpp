@@ -4,10 +4,10 @@
 
 void Desk::PreciseUpdate(const Coord from, const Coord to)
 {
-	//assert((from != to && grid[to.y][to.x] != nullptr) && L"cell for pice write must not be empty");
+	//assert((from != to && grid[to.y][to.x] != nullptr) && L"cell for pice write must not be empty");//always triggering
 
 	size_t cell = (FIRST_CELL_Y + from.y * 2) * WIDTH + FIRST_CELL_X + from.x * 3;//Update 'from' cell
-	if ((from.x + from.y) % 2 == 1) { //if cell should be painted - paint
+	if ((from.x + from.y) % 2 == 0) { //if cell should be painted - paint
 		map[cell] = L'█';
 		map[cell + 1] = L'█';
 	}
@@ -65,6 +65,11 @@ void Desk::SetPice(const Coord pos, ChessPice *pice) {
 	assert(pos.x < 9 && pos.y < 9 && L"Coord must be less then 9");
 	assert(pice != nullptr && L"Pice for insert must exist");
 
+	if (pice->GetName() == L'K') {
+		if (pice->GetColr() == L'W') wking = pos;
+		else bking = pos;
+	}
+
 	if (grid[pos.y][pos.x] != nullptr) delete grid[pos.y][pos.x];
 	grid[pos.y][pos.x] = move(pice);
 	//pice = nullptr;//!!! make 'pice' invalid after SetPice() call!!!
@@ -73,6 +78,26 @@ void Desk::SetPice(const Coord pos, ChessPice *pice) {
 bool Desk::Move(const Coord from, const Coord to)
 {
 	if (!grid[from.y][from.x]->Rule(from, to, grid)) return false;//rule violation check
+	//if (Stalemate()) {//if you are under a Stalemate
+	//	wcout << L"You are under a Stalemate\n";
+	//	return false;
+	//}
+	if (Check(from, to, grid)) {//if you are under a Check
+		wcout << L"You will be under a Check\n";
+		return false;
+	}
+	//if you are under a Check/CheckMate/!!Pate!!
+
+	if (grid[from.y][from.x]->GetColr() == L'W' && wking) {
+		if (Checkmate(wking)) {
+			wcout << L"You are under a CheckMate, Black won!\n";
+			return false;
+		}
+	}
+	else if (bking) if (Checkmate(bking)) {
+		wcout << L"You are under a CheckMate, White won!\n";
+		return false;
+	}
 
 	if (IfEnPassant(from, to)) return true;//for intercepted
 	else if (grid[from.y][from.x]->GetName() == L'P' && to == en_passant)//if interceptor
@@ -172,6 +197,7 @@ bool Desk::Move(const Coord from, const Coord to)
 		}
 		en_passant = {-1, -1};
 	}
+
 	return true;
 }
 
@@ -196,12 +222,12 @@ void Desk::Refresh() {
 				map[cell] = grid[y][x]->GetColr();
 				map[cell + 1] = grid[y][x]->GetName();
 			}
-			else if ((y + x) % 2 == 0) map[cell + 1] = map[cell] = L' ';
+			else if ((y + x) % 2 != 0) map[cell + 1] = map[cell] = L' ';
 			else map[cell + 1] = map[cell] = L'█';
 		}
 }
 
-void Desk::Clear()
+void Desk::ClearBoard()
 {
 	for (size_t y = 0; y < CELLS; y++) //cells
 		for (size_t x = 0; x < CELLS; x++) {
@@ -231,8 +257,9 @@ void Desk::DefaultPlacement()
 	grid[0][1] = new WkNight;
 	grid[0][6] = new WkNight;
 
+	wking = Coord{0,4};
 
-	for (size_t i = 0; i < CELLS; i++) 
+	for (size_t i = 0; i < CELLS; i++)
 		grid[6][i] = new BPawn;
 
 	grid[7][0] = new BRook;
@@ -246,17 +273,282 @@ void Desk::DefaultPlacement()
 
 	grid[7][1] = new BkNight;
 	grid[7][6] = new BkNight;
+
+	bking = Coord{7,4};
 }
 
 void Desk::Restart() {
-	Clear();
+	ClearBoard();
 	DefaultPlacement();
 	Refresh();
 }
 
 const bool Desk::Save() {
-	
-}
-bool Desk::Load() {
+	wofstream save("Save.txt");
+	if (!save) return false;
 
+	for (size_t y = 0; y < CELLS; y++)
+		for (size_t x = 0; x < CELLS; x++)
+		{
+			if (grid[y][x] != nullptr)
+			{
+				save << grid[y][x]->GetColr();
+				save << grid[y][x]->GetName();
+
+				if (grid[y][x]->GetName() == L'K')
+					save << static_cast<King*>(grid[y][x])->IfMoved();
+				else if (grid[y][x]->GetName() == L'R')
+					save << static_cast<Rook*>(grid[y][x])->IfMoved();
+			}
+			else save << L'#';
+		}
+
+	return true;
+}
+
+bool Desk::Load() {
+	wifstream save("Save.txt");
+	if (!save) return false;
+	if (save.eof()) return false;
+
+	wchar_t red;
+	ClearBoard();
+
+	for (int y = 0; y < CELLS; y++)
+		for (int x = 0; x < CELLS; x++)
+		{
+			if (save.eof()) return false;
+
+			save >> red;
+
+			if (red == L'#') grid[y][x] = nullptr;
+			else if (red == L'W')
+			{
+				if (save.eof()) return false;
+				save >> red;
+
+				if (red == L'R') {
+					bool moved;
+					SetPice(Coord{y,x}, new WRook);
+
+					if (save.eof()) return false;
+					save >> moved;
+
+					if (moved) static_cast<Rook*>(grid[y][x])->YesMoved();
+				}
+				else if (red == L'K') {
+					bool moved;
+					SetPice(Coord{y,x}, new WKing);
+					wking = Coord{y,x};
+
+					if (save.eof()) return false;
+					save >> moved;
+
+					if (moved) static_cast<King*>(grid[y][x])->YesMoved();
+				}
+				else if (red == L'p') SetPice(Coord{y,x}, new EnPawn(L'W'));
+				else if (red == L'P') SetPice(Coord{y,x}, new WPawn);
+				else if (red == L'B') SetPice(Coord{y,x}, new WBishop);
+				else if (red == L'N') SetPice(Coord{y,x}, new WkNight);
+				else if (red == L'Q') SetPice(Coord{y,x}, new WQueen);
+				else return false;
+			}
+			else if (red == L'B')
+			{
+				if (save.eof()) return false;
+				save >> red;
+
+				if (red == L'R') {
+					bool moved;
+					SetPice(Coord{y,x}, new BRook);
+
+					if (save.eof()) return false;
+					save >> moved;
+
+					if (moved) static_cast<Rook*>(grid[y][x])->YesMoved();
+				}
+				else if (red == L'K') {
+					bool moved;
+					SetPice(Coord{y,x}, new BKing);
+					wking = Coord{y,x};
+
+					if (save.eof()) return false;
+					save >> moved;
+
+					if (moved) static_cast<King*>(grid[y][x])->YesMoved();
+				}
+				else if (red == L'p') SetPice(Coord{y,x}, new EnPawn(L'B'));
+				else if (red == L'P') SetPice(Coord{y,x}, new BPawn);
+				else if (red == L'B') SetPice(Coord{y,x}, new BBishop);
+				else if (red == L'N') SetPice(Coord{y,x}, new BkNight);
+				else if (red == L'Q') SetPice(Coord{y,x}, new BQueen);
+				else return false;
+			}
+			else return false;
+		}
+
+	Refresh();
+
+	return true;
+}
+
+
+const bool Desk::Check(const Coord from, const Coord to, const grid_t ngrid)
+{//if any opponent's pice can strike the king
+	Coord king;
+	assert(ngrid[from.y][from.x] != nullptr);
+
+	wchar_t side = ngrid[from.y][from.x]->GetColr();
+
+	if (side == L'W') king = wking;
+	else king = bking;
+
+	if (!king) return false;//can trigger only within unit testing
+
+	if (from == to) {//if you are under the Check(static)
+		king = from;
+		auto& f_grid = ngrid;
+
+
+		for (int y = 0; y < CELLS; y++)
+			for (int x = 0; x < CELLS; x++)
+				if (f_grid[y][x] != nullptr && f_grid[y][x]->GetColr() != side)
+					if (f_grid[y][x]->Rule(Coord{y,x}, king, f_grid)) return true;
+	}
+	else {//if check will occur(move)
+		if (ngrid[from.y][from.x]->GetName() == L'K') king = to;
+		auto f_grid = ngrid;
+
+		f_grid[to.y][to.x] = move(f_grid[from.y][from.x]);
+		f_grid[from.y][from.x] = nullptr;
+
+		for (int y = 0; y < CELLS; y++)
+			for (int x = 0; x < CELLS; x++)
+				if (f_grid[y][x] != nullptr && f_grid[y][x]->GetColr() != side)
+					if (f_grid[y][x]->Rule(Coord{y,x}, king, f_grid)) return true;
+	}
+
+	return false;
+}
+
+const bool Desk::Checkmate(const Coord king)
+{
+	if (!Check(king, king, grid))return false;
+
+	assert(king && (king == wking || king == bking) && L"King Coord must be valod");
+
+	wchar_t side = grid[king.y][king.x]->GetColr();
+
+	for (int y = 0; y < 8; y++)
+		for (int x = 0; x < 8; x++)
+		{
+			Coord mov{0,0}, pre_mov{y,x};
+
+			//returns true if check can be avoided
+			auto CheckDodge = [&] (Coord(*GoWrapper)(const Coord pos), grid_t &sub_grid, Coord &mov, Coord &pre_mov) -> bool
+			{
+				mov = GoWrapper(Coord{y,x});
+
+				if (mov.y > 7 || mov.y < 0 || mov.x > 7 || mov.x < 0) return false;
+				if (!grid[y][x]->Rule(Coord{y,x}, mov, grid)) return false;
+
+
+				sub_grid[mov.y][mov.x] = move(sub_grid[pre_mov.y][pre_mov.x]);
+				sub_grid[pre_mov.y][pre_mov.x] = nullptr;
+
+				if (GoWrapper == Walker::GoKing) {
+					if (!Check(mov, mov, sub_grid)) {
+						mov = GoWrapper(Coord{-1,-1});//reset
+						return true;
+					}
+				}
+				else if (!Check(king, king, sub_grid)) {
+					mov = GoWrapper(Coord{-1,-1});//reset
+					return true;
+				}
+
+				pre_mov = mov;
+				return false;
+			};
+
+			if (grid[y][x] == nullptr) continue;
+			if (grid[y][x]->GetColr() != side) continue;
+
+			auto sub_grid = grid;
+
+			if (grid[y][x]->GetName() == L'P') {
+				while (mov) if (CheckDodge(Walker::GoPawn, sub_grid, mov, pre_mov)) return false;
+			}
+			else if (grid[y][x]->GetName() == L'K') {
+				while (mov) if (CheckDodge(Walker::GoKing, sub_grid, mov, pre_mov)) return false;
+			}
+			else if (grid[y][x]->GetName() == L'N') {
+				while (mov)
+					if (CheckDodge(Walker::GokNight, sub_grid, mov, pre_mov)) return false;
+			}
+			else if (grid[y][x]->GetName() == L'R') {
+				while (mov)
+					if (CheckDodge(Walker::GoRook, sub_grid, mov, pre_mov)) return false;
+			}
+			else if (grid[y][x]->GetName() == L'B') {
+				while (mov)
+					if (CheckDodge(Walker::GoBishop, sub_grid, mov, pre_mov)) return false;
+			}
+			else if (grid[y][x]->GetName() == L'Q') {
+				while (mov)
+					if (CheckDodge(Walker::GoQueen, sub_grid, mov, pre_mov)) return false;
+			}
+		}
+
+	return true;
+}
+
+const bool Desk::Stalemate(const Coord from)
+{
+	assert(grid[from.y][from.x] != nullptr);
+
+	wchar_t side = grid[from.y][from.x]->GetColr();
+
+	for (int y = 0; y < 8; y++)
+		for (int x = 0; x < 8; x++)
+		{
+			auto CanMove = [&] (Coord(*GoWrapper)(const Coord pos), Coord &mov) -> bool
+			{
+				mov = GoWrapper(Coord{y,x});
+
+				if (mov.y > 7 || mov.y < 0 || mov.x > 7 || mov.x < 0) return false;
+
+				if (grid[y][x]->Rule(Coord{y,x}, mov, grid)) {
+					mov = GoWrapper(Coord{-1,-1});//reset
+					return true;
+				}
+
+				return false;
+			};
+
+			Coord mov{0,0};
+			if (grid[y][x] == nullptr) continue;
+			if (grid[y][x]->GetColr() != side) continue;
+
+			if (grid[y][x]->GetName() == L'K') {
+				while (mov) if (CanMove(Walker::GoKing, mov)) return false;
+			}
+			else if (grid[y][x]->GetName() == L'P') {
+				while (mov) if (CanMove(Walker::GoPawn, mov)) return false;
+			}
+			else if (grid[y][x]->GetName() == L'R') {
+				while (mov) if (CanMove(Walker::GoRook, mov)) return false;
+			}
+			else if (grid[y][x]->GetName() == L'B') {
+				while (mov) if (CanMove(Walker::GoBishop, mov)) return false;
+			}
+			else if (grid[y][x]->GetName() == L'N') {
+				while (mov) if (CanMove(Walker::GokNight, mov)) return false;
+			}
+			else if (grid[y][x]->GetName() == L'Q') {
+				while (mov) if (CanMove(Walker::GoQueen, mov)) return false;
+			}
+		}
+
+	return true;
 }

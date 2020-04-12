@@ -50,10 +50,11 @@ constexpr auto MAKE_BOARD(void) {
 
 	for (size_t y = 0; y < CELLS; y++) //painting cells
 		for (size_t x = 0; x < CELLS; x++) {
-			if ((y + x) % 2 == 0) continue;
-			size_t cell = (FIRST_CELL_Y + y * 2) * WIDTH + FIRST_CELL_X + x * 3;
-			grid[cell] = L'█';
-			grid[cell + 1] = L'█';
+			if ((y + x) % 2 == 0) {
+				size_t cell = (FIRST_CELL_Y + y * CELL_ITER_Y) * WIDTH + FIRST_CELL_X + x * CELL_ITER_X;
+				grid[cell] = L'█';
+				grid[cell + 1] = L'█';
+			}
 		}
 
 	return grid;
@@ -63,9 +64,9 @@ constexpr auto MAKE_BOARD(void) {
 struct Coord {
 	int y;
 	int x;
-	friend bool operator== (const Coord &lhs, const Coord &rhs)
+	friend const bool operator== (const Coord &lhs, const Coord &rhs)
 	{ return (lhs.x == rhs.x) && (lhs.y == rhs.y); }
-	operator bool() { return x != -1 && y != -1; }
+	operator bool() const { return x != -1 || y != -1; }
 };
 
 //get distance btween

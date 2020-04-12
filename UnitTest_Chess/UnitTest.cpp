@@ -12,7 +12,7 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace UnitTest_for_Chess
 {
-	TEST_CLASS(InputAndDist)
+	TEST_CLASS(InputAndDistance)
 	{
 	public:
 
@@ -55,6 +55,7 @@ namespace UnitTest_for_Chess
 		}
 	};
 
+	
 	TEST_CLASS(Pawn_Movement)
 	{
 	public:
@@ -114,6 +115,207 @@ namespace UnitTest_for_Chess
 		}
 	};
 
+	TEST_CLASS(Rook_Movement)
+	{
+	public:
+		TEST_METHOD(Valid_Movement)
+		{
+			Desk board;
+
+			board.SetPice(Coord{3,4}, new BRook);
+
+			board.Refresh();
+			//Logger::WriteMessage(board.Mapout().c_str());
+
+			Assert::IsTrue(board.Move(Coord{3,4}, Coord{3,6}), L"Just move");
+			Assert::IsTrue(board.Move(Coord{3,6}, Coord{1,6}), L"Just move");
+			Assert::IsFalse(board.Move(Coord{1,6}, Coord{2,5}), L"Just wrong move diagonally");
+			Assert::IsFalse(board.Move(Coord{1,6}, Coord{4,2}), L"Just wrong move ");
+
+			//Logger::WriteMessage(board.Mapout().c_str());
+
+		}
+
+		TEST_METHOD(Front_Enemy)
+		{
+			Desk board;
+
+			board.SetPice(Coord{1,1}, new WRook);
+			board.SetPice(Coord{2,1}, new BPawn);
+			board.SetPice(Coord{2,2}, new BPawn);
+
+
+			board.Refresh();
+			Logger::WriteMessage(board.Mapout().c_str());
+
+			Assert::IsFalse(board.Move(Coord{1,1}, Coord{2,2}), L"Rooks cannot beat diagonally");
+			Assert::IsFalse(board.Move(Coord{1,1}, Coord{3,1}), L"Rook cannot overjump");
+			Assert::IsTrue(board.Move(Coord{1,1}, Coord{2,1}), L"Rook can beat vertically");
+
+			Logger::WriteMessage(board.Mapout().c_str());
+		}
+	};
+
+	TEST_CLASS(Bishop_Movement)
+	{
+	public:
+		TEST_METHOD(Valid_Movement)
+		{
+			Desk board;
+
+			board.SetPice(Coord{0,0}, new WBishop);
+
+			board.Refresh();
+			//Logger::WriteMessage(board.Mapout().c_str());
+
+			Assert::IsTrue(board.Move(Coord{0,0}, Coord{5,5}), L"Just move");
+			Assert::IsTrue(board.Move(Coord{5,5}, Coord{4,6}), L"Just move");
+			Assert::IsFalse(board.Move(Coord{4,6}, Coord{4,5}), L"Just wrong move ");
+			Assert::IsFalse(board.Move(Coord{4,6}, Coord{3,4}), L"Just wrong move ");
+
+			//Logger::WriteMessage(board.Mapout().c_str());
+
+		}
+
+		TEST_METHOD(Front_Enemy)
+		{
+			Desk board;
+
+			board.SetPice(Coord{1,1}, new WBishop);
+			board.SetPice(Coord{2,1}, new BPawn);
+			board.SetPice(Coord{2,2}, new BPawn);
+
+
+			board.Refresh();
+			Logger::WriteMessage(board.Mapout().c_str());
+
+			Assert::IsFalse(board.Move(Coord{1,1}, Coord{2,1}), L"Bishop cannot beat aside");
+			Assert::IsFalse(board.Move(Coord{1,1}, Coord{3,3}), L"Bishop cannot overjump");
+			Assert::IsTrue(board.Move(Coord{1,1}, Coord{2,2}), L"Bishop can beat diagonally");
+
+			Logger::WriteMessage(board.Mapout().c_str());
+		}
+	};
+
+	TEST_CLASS(kNight_Movement)
+	{
+	public:
+		TEST_METHOD(Valid_Movement)
+		{
+			Desk board;
+
+			board.SetPice(Coord{0,0}, new WkNight);
+
+			board.Refresh();
+			Logger::WriteMessage(board.Mapout().c_str());
+
+			Assert::IsTrue(board.Move(Coord{0,0}, Coord{2,1}), L"Just move");
+
+			Assert::IsTrue(board.Move(Coord{2,1}, Coord{1,3}), L"Just move");
+			Assert::IsFalse(board.Move(Coord{1,3}, Coord{4,5}), L"Just wrong move ");
+			Assert::IsFalse(board.Move(Coord{1,3}, Coord{3,7}), L"Just wrong move ");
+
+			//Logger::WriteMessage(board.Mapout().c_str());
+
+		}
+
+		TEST_METHOD(Front_Enemy)
+		{
+			Desk board;
+
+			board.SetPice(Coord{0,0}, new WkNight);
+			board.SetPice(Coord{0,1}, new WBishop);
+			board.SetPice(Coord{1,0}, new WPawn);
+			board.SetPice(Coord{1,1}, new WPawn);
+
+			board.SetPice(Coord{2,1}, new BPawn);
+			board.SetPice(Coord{2,2}, new BPawn);
+
+
+			board.Refresh();
+			Logger::WriteMessage(board.Mapout().c_str());
+
+			Assert::IsTrue(board.Move(Coord{0,0}, Coord{2,1}), L"Knight can overjump and beat right down down");
+			Assert::IsFalse(board.Move(Coord{2,1}, Coord{2,2}), L"Knight cannot beat aside");
+
+			Logger::WriteMessage(board.Mapout().c_str());
+		}
+	};
+
+	TEST_CLASS(Queen_Movement)//!
+	{
+	public:
+		TEST_METHOD(Valid_Movement)
+		{
+			Desk board;
+
+			board.SetPice(Coord{3,3}, new WQueen);
+			board.SetPice(Coord{5,5}, new BQueen);
+			board.SetPice(Coord{3,5}, new BRook);
+
+			board.Refresh();
+			Logger::WriteMessage(board.Mapout().c_str());
+
+			Assert::IsTrue(board.Move(Coord{3,3}, Coord{5,5}), L"Queen can move & beat diagonally");
+			Assert::IsTrue(board.Move(Coord{5,5}, Coord{3,5}), L"Queen can move & beat vertically");
+			Assert::IsFalse(board.Move(Coord{3,5}, Coord{2,2}), L"Queen cannot move that way");
+
+			Logger::WriteMessage(board.Mapout().c_str());
+
+		}
+	};
+
+	TEST_CLASS(King_Movement_and_Castling)//!
+	{
+	public:
+		TEST_METHOD(Castling_Test)
+		{
+			Desk board;
+
+			board.SetPice(Coord{7,4}, new BKing);
+			board.SetPice(Coord{7,0}, new BRook);
+			board.SetPice(Coord{7,7}, new WRook);
+
+			board.Refresh();
+			Logger::WriteMessage(board.Mapout().c_str());
+
+			Assert::IsFalse(board.Move(Coord{7,4}, Coord{7,6}), L"Cannot castle with enemy Rook");
+
+			board.ErasePice(Coord{7,7});//erase White Rook to avoid Check
+			board.Refresh();
+
+			Assert::IsTrue(board.Move(Coord{7,4}, Coord{7,2}), L"Just Castle");
+
+			Logger::WriteMessage(board.Mapout().c_str());
+		}
+
+		TEST_METHOD(Valid_Movement)
+		{
+			Desk board;
+
+			board.SetPice(Coord{0,4}, new WKing);
+			board.SetPice(Coord{0,7}, new WRook);
+			board.SetPice(Coord{1,3}, new BPawn);
+
+			board.Refresh();
+			Logger::WriteMessage(board.Mapout().c_str());
+
+			Assert::IsTrue(board.Move(Coord{0,4}, Coord{1,3}), L"King can move diagonally & beat");
+			Assert::IsTrue(board.Move(Coord{1,3}, Coord{0,3}), L"King can move vertically");
+			Assert::IsTrue(board.Move(Coord{0,3}, Coord{0,4}), L"King can move horizonally");
+
+			Assert::IsFalse(board.Move(Coord{0,4}, Coord{0,6}), L"King cannot Castle after movement");
+
+			board.SetPice(Coord{2,4}, new BPawn);//for Check triggering
+			board.Refresh();
+
+			Assert::IsFalse(board.Move(Coord{0,4}, Coord{1,5}), L"King cannot move to a Check position");
+
+			Logger::WriteMessage(board.Mapout().c_str());
+		}
+	};
+
+
 	TEST_CLASS(EnPassan_Mechanics)
 	{
 	public:
@@ -168,6 +370,7 @@ namespace UnitTest_for_Chess
 		}
 	};
 
+	//need update
 	TEST_CLASS(Promotion_Mechanics)//reqires input from the user(originally)
 	{
 		wstring map = MAKE_BOARD().data();
@@ -185,7 +388,7 @@ namespace UnitTest_for_Chess
 			//assert((from != to && grid[to.y][to.x] != nullptr) && L"cell for pice write must not be empty");
 
 			size_t cell = (FIRST_CELL_Y + from.y * 2) * WIDTH + FIRST_CELL_X + from.x * 3;//Update 'from' cell
-			if ((from.x + from.y) % 2 == 1) { //if cell should be painted - paint
+			if ((from.x + from.y) % 2 == 0) { //if cell should be painted - paint
 				map[cell] = L'█';
 				map[cell + 1] = L'█';
 			}
@@ -358,7 +561,7 @@ namespace UnitTest_for_Chess
 						map[cell] = grid[y][x]->GetColr();
 						map[cell + 1] = grid[y][x]->GetName();
 					}
-					else if ((y + x) % 2 == 0) map[cell + 1] = map[cell] = L' ';
+					else if ((y + x) % 2 != 0) map[cell + 1] = map[cell] = L' ';
 					else map[cell + 1] = map[cell] = L'█';
 				}
 		}
@@ -383,220 +586,226 @@ namespace UnitTest_for_Chess
 		}
 	};
 
-	TEST_CLASS(Rook_Movement)
+	TEST_CLASS(Check_Mechanic_Test)
 	{
-	public:
-		TEST_METHOD(Valid_Movement)
-		{
+		TEST_METHOD(Test_1) {
 			Desk board;
 
-			board.SetPice(Coord{3,4}, new BRook);
+			board.SetPice(Coord{0,4}, new WKing);
+			board.SetPice(Coord{2,3}, new BPawn);
+			board.SetPice(Coord{2,6}, new BkNight);
 
 			board.Refresh();
-			//Logger::WriteMessage(board.Mapout().c_str());
+			Logger::WriteMessage(board.Mapout().c_str());
 
-			Assert::IsTrue(board.Move(Coord{3,4}, Coord{3,6}), L"Just move");
-			Assert::IsTrue(board.Move(Coord{3,6}, Coord{1,6}), L"Just move");
-			Assert::IsFalse(board.Move(Coord{1,6}, Coord{2,5}), L"Just wrong move diagonally");
-			Assert::IsFalse(board.Move(Coord{1,6}, Coord{4,2}), L"Just wrong move ");
+			Assert::IsFalse(board.Check(Coord{0,4}, Coord{0,4}, board.Layout()), L"There are NO Check");
+				
+			Assert::IsFalse(board.Move(Coord{0,4}, Coord{1,4}), L"There WILL be a Check");
 
-			//Logger::WriteMessage(board.Mapout().c_str());
+			Assert::IsTrue(board.Move(Coord{0,4}, Coord{0,3}), L"There WONT be a Check");
+		}
+	};
+
+	TEST_CLASS(CheckMate_Mechanic_Test)
+	{//dont move king, there are function that accepts absolute position that must represent king's current position
+		TEST_METHOD(Test_0) {//!!!make king
+			Desk board;
+
+			board.SetPice(Coord{2,2}, new BKing);
+			board.SetPice(Coord{1,4}, new BPawn);
+
+			board.SetPice(Coord{1,6}, new WRook);
+			board.SetPice(Coord{2,6}, new WRook);
+			board.SetPice(Coord{3,6}, new WRook);
+
+			board.Refresh();
+			Logger::WriteMessage(board.Mapout().c_str());
+
+			Assert::IsTrue(board.Check(Coord{2,2}, Coord{2,2}, board.Layout()), L"There are Check");
+			Assert::IsFalse(board.Checkmate(Coord{2,2}), L"There are NO CheckMate");//BkNight can cancel attack
+
+			Logger::WriteMessage(board.Mapout().c_str());
+		}
+
+		TEST_METHOD(Test_1) {
+			Desk board;
+
+			board.SetPice(Coord{2,2}, new WKing);
+			board.SetPice(Coord{1,3}, new WPawn);
+
+			board.SetPice(Coord{2,6}, new BRook);
+
+			board.Refresh();
+			Logger::WriteMessage(board.Mapout().c_str());
+
+			Assert::IsTrue(board.Check(Coord{2,2}, Coord{2,2}, board.Layout()), L"There are Check");
+			Assert::IsFalse(board.Checkmate(Coord{2,2}), L"There are NO CheckMate");//WPawn can attack
+
+			Logger::WriteMessage(board.Mapout().c_str());
+		}
+
+		TEST_METHOD(Test_2) {//untill no GOKing()!!!
+			Desk board;
+
+			board.SetPice(Coord{2,2}, new WKing);
+			board.SetPice(Coord{1,3}, new WPawn);
+
+			board.SetPice(Coord{7,0}, new BQueen);
+			board.SetPice(Coord{2,6}, new BRook);
+
+			board.Refresh();
+			Logger::WriteMessage(board.Mapout().c_str());
+
+			Assert::IsTrue(board.Check(Coord{2,2}, Coord{2,2}, board.Layout()), L"There are Check");
+			Assert::IsFalse(board.Checkmate(Coord{2,2}), L"There are NO CheckMate");//WPawn can attack
+
+			
+			Assert::IsTrue(board.Move(Coord{7,0}, Coord{7,2}), L"BQueen can put a Check on WKing");
+
+
+
+			Assert::IsFalse(board.Checkmate(Coord{2,2}), L"King can avoid Check");
+
+			Logger::WriteMessage(board.Mapout().c_str());
+
+
+			board.SetPice(Coord{7,0}, new BQueen);
+			board.SetPice(Coord{7,1}, new BQueen);
+			board.SetPice(Coord{7,3}, new BQueen);
+
+			board.Refresh();
+			Logger::WriteMessage(board.Mapout().c_str());
+
+			Assert::IsTrue(board.Checkmate(Coord{2,2}), L"King cannot avoid CheckMate");
 
 		}
 
-		TEST_METHOD(Front_Enemy)
-		{
+		TEST_METHOD(Test_3) {
 			Desk board;
 
-			board.SetPice(Coord{1,1}, new WRook);
-			board.SetPice(Coord{2,1}, new BPawn);
+			board.SetPice(Coord{2,2}, new BKing);
+			board.SetPice(Coord{1,4}, new BkNight);
+
+			board.SetPice(Coord{1,6}, new WRook);
+			board.SetPice(Coord{2,6}, new WRook);
+			board.SetPice(Coord{3,6}, new WRook);
+
+			board.Refresh();
+			Logger::WriteMessage(board.Mapout().c_str());
+
+			Assert::IsTrue(board.Check(Coord{2,2}, Coord{2,2}, board.Layout()), L"There are Check");
+			Assert::IsFalse(board.Checkmate(Coord{2,2}), L"There are NO CheckMate");//BkNight can cancel attack
+
+			Logger::WriteMessage(board.Mapout().c_str());
+		}
+
+		TEST_METHOD(Test_4) {
+			Desk board;
+
+			board.SetPice(Coord{2,2}, new BKing);
+			//board.SetPice(Coord{1,4}, new BPawn);
+			board.SetPice(Coord{0,4}, new BRook);
+
+			board.SetPice(Coord{1,6}, new WRook);
+			board.SetPice(Coord{2,6}, new WRook);
+			board.SetPice(Coord{3,6}, new WRook);
+
+			board.Refresh();
+			Logger::WriteMessage(board.Mapout().c_str());
+
+			Assert::IsTrue(board.Check(Coord{2,2}, Coord{2,2}, board.Layout()), L"There are Check");
+			Assert::IsFalse(board.Checkmate(Coord{2,2}), L"There are NO CheckMate");//BRook can cancel attack
+
+			Logger::WriteMessage(board.Mapout().c_str());
+		}
+
+		TEST_METHOD(Test_5) {
+			Desk board;
+
+			board.SetPice(Coord{2,2}, new BKing);
+			//board.SetPice(Coord{0,4}, new BBishop);
+			//board.SetPice(Coord{5,3}, new BBishop);
+			board.SetPice(Coord{1,7}, new BBishop);
+
+			board.SetPice(Coord{1,6}, new WRook);
+			board.SetPice(Coord{2,6}, new WRook);
+			board.SetPice(Coord{3,6}, new WRook);
+
+			board.Refresh();
+			Logger::WriteMessage(board.Mapout().c_str());
+
+			Assert::IsTrue(board.Check(Coord{2,2}, Coord{2,2}, board.Layout()), L"There are Check");
+			Assert::IsFalse(board.Checkmate(Coord{2,2}), L"There are NO CheckMate");//BBishop can cancel attack
+
+			Logger::WriteMessage(board.Mapout().c_str());
+		}
+
+		TEST_METHOD(Test_6) {
+			Desk board;
+
+			board.SetPice(Coord{2,2}, new BKing);
+			//board.SetPice(Coord{0,4}, new BQueen);
+			//board.SetPice(Coord{5,3}, new BQueen);
+			//board.SetPice(Coord{1,7}, new BQueen);
+			board.SetPice(Coord{2,7}, new BQueen);
+
+			board.SetPice(Coord{1,6}, new WRook);
+			board.SetPice(Coord{2,6}, new WRook);
+			board.SetPice(Coord{3,6}, new WRook);
+
+			board.Refresh();
+			Logger::WriteMessage(board.Mapout().c_str());
+
+			Assert::IsTrue(board.Check(Coord{2,2}, Coord{2,2}, board.Layout()), L"There are Check");
+			Assert::IsFalse(board.Checkmate(Coord{2,2}), L"There are NO CheckMate");//BBishop can cancel attack
+
+			Logger::WriteMessage(board.Mapout().c_str());
+		}
+
+		TEST_METHOD(Full_Board) {
+			Desk board;
+			board.Start();
+
+			board.SetPice(Coord{2,3}, new BkNight);
+
+			board.Refresh();
+			Logger::WriteMessage(board.Mapout().c_str());
+
+			Assert::IsTrue(board.Check(Coord{0,4}, Coord{0,4}, board.Layout()), L"There are Check");
+			Assert::IsFalse(board.Checkmate(Coord{0,4}), L"Pawn can beat the threat");
+
+			Assert::IsFalse(board.Move(Coord{1,2}, Coord{2,2}), L"King is under the Check");
+
+			board.ErasePice(Coord{1,4});
+
+			board.SetPice(Coord{5,4}, new BRook);
+
+			Assert::IsTrue(board.Checkmate(Coord{0,4}), L"No Escape");
+
+			board.Refresh();
+			Logger::WriteMessage(board.Mapout().c_str());
+		}
+	};
+
+	TEST_CLASS(StaleMate_Test)
+	{
+		TEST_METHOD(Test_1) {
+			Desk board;
+
+
+			board.SetPice(Coord{1,2}, new WPawn);
+
 			board.SetPice(Coord{2,2}, new BPawn);
 
 
 			board.Refresh();
 			Logger::WriteMessage(board.Mapout().c_str());
 
-			Assert::IsFalse(board.Move(Coord{1,1}, Coord{2,2}), L"Rooks cannot beat diagonally");
-			Assert::IsFalse(board.Move(Coord{1,1}, Coord{3,1}), L"Rook cannot overjump");
-			Assert::IsTrue(board.Move(Coord{1,1}, Coord{2,1}), L"Rook can beat vertically");
+			Assert::IsTrue(board.Stalemate(Coord{1,2}), L"White are under a stalemate");
 
-			Logger::WriteMessage(board.Mapout().c_str());
+			Assert::IsTrue(board.Stalemate(Coord{2,2}), L"Black are under a stalemate");
+
 		}
 	};
 
-	TEST_CLASS(Bishop_Movement)
-	{
-	public:
-		TEST_METHOD(Valid_Movement)
-		{
-			Desk board;
-
-			board.SetPice(Coord{0,0}, new WBishop);
-
-			board.Refresh();
-			//Logger::WriteMessage(board.Mapout().c_str());
-
-			Assert::IsTrue(board.Move(Coord{0,0}, Coord{5,5}), L"Just move");
-			Assert::IsTrue(board.Move(Coord{5,5}, Coord{4,6}), L"Just move");
-			Assert::IsFalse(board.Move(Coord{4,6}, Coord{4,5}), L"Just wrong move ");
-			Assert::IsFalse(board.Move(Coord{4,6}, Coord{3,4}), L"Just wrong move ");
-
-			//Logger::WriteMessage(board.Mapout().c_str());
-
-		}
-
-		TEST_METHOD(Front_Enemy)
-		{
-			Desk board;
-
-			board.SetPice(Coord{1,1}, new WBishop);
-			board.SetPice(Coord{2,1}, new BPawn);
-			board.SetPice(Coord{2,2}, new BPawn);
-
-
-			board.Refresh();
-			Logger::WriteMessage(board.Mapout().c_str());
-
-			Assert::IsFalse(board.Move(Coord{1,1}, Coord{2,1}), L"Bishop cannot beat aside");
-			Assert::IsFalse(board.Move(Coord{1,1}, Coord{3,3}), L"Bishop cannot overjump");
-			Assert::IsTrue(board.Move(Coord{1,1}, Coord{2,2}), L"Bishop can beat diagonally");
-
-			Logger::WriteMessage(board.Mapout().c_str());
-		}
-	};
-
-	TEST_CLASS(kNight_Movement)
-	{
-	public:
-		TEST_METHOD(Valid_Movement)
-		{
-			Desk board;
-
-			board.SetPice(Coord{0,0}, new WkNight);
-
-			board.Refresh();
-			Logger::WriteMessage(board.Mapout().c_str());
-
-			Assert::IsTrue(board.Move(Coord{0,0}, Coord{2,1}), L"Just move");
-
-			Assert::IsTrue(board.Move(Coord{2,1}, Coord{1,3}), L"Just move");
-			Assert::IsFalse(board.Move(Coord{1,3}, Coord{4,5}), L"Just wrong move ");
-			Assert::IsFalse(board.Move(Coord{1,3}, Coord{3,7}), L"Just wrong move ");
-
-			//Logger::WriteMessage(board.Mapout().c_str());
-
-		}
-
-		TEST_METHOD(Front_Enemy)
-		{
-			Desk board;
-
-			board.SetPice(Coord{0,0}, new WkNight);
-			board.SetPice(Coord{0,1}, new WBishop);
-			board.SetPice(Coord{1,0}, new WPawn);
-			board.SetPice(Coord{1,1}, new WPawn);
-
-			board.SetPice(Coord{2,1}, new BPawn);
-			board.SetPice(Coord{2,2}, new BPawn);
-
-
-			board.Refresh();
-			Logger::WriteMessage(board.Mapout().c_str());
-
-			Assert::IsTrue(board.Move(Coord{0,0}, Coord{2,1}), L"Knight can overjump and beat right down down");
-			Assert::IsFalse(board.Move(Coord{2,1}, Coord{2,2}), L"Knight cannot beat aside");
-
-			Logger::WriteMessage(board.Mapout().c_str());
-		}
-	};
-
-	TEST_CLASS(Queen_Movement)//!
-	{
-	public:
-		TEST_METHOD(Valid_Movement)
-		{
-			Desk board;
-
-			board.SetPice(Coord{0,0}, new WkNight);
-
-			board.Refresh();
-			Logger::WriteMessage(board.Mapout().c_str());
-
-			Assert::IsTrue(board.Move(Coord{0,0}, Coord{2,1}), L"Just move");
-
-			Assert::IsTrue(board.Move(Coord{2,1}, Coord{1,3}), L"Just move");
-			Assert::IsFalse(board.Move(Coord{1,3}, Coord{4,5}), L"Just wrong move ");
-			Assert::IsFalse(board.Move(Coord{1,3}, Coord{3,7}), L"Just wrong move ");
-
-			//Logger::WriteMessage(board.Mapout().c_str());
-
-		}
-
-		TEST_METHOD(Front_Enemy)
-		{
-			Desk board;
-
-			board.SetPice(Coord{0,0}, new WkNight);
-			board.SetPice(Coord{0,1}, new WBishop);
-			board.SetPice(Coord{1,0}, new WPawn);
-			board.SetPice(Coord{1,1}, new WPawn);
-
-			board.SetPice(Coord{2,1}, new BPawn);
-			board.SetPice(Coord{2,2}, new BPawn);
-
-
-			board.Refresh();
-			Logger::WriteMessage(board.Mapout().c_str());
-
-			Assert::IsTrue(board.Move(Coord{0,0}, Coord{2,1}), L"Knight can overjump and beat right down down");
-			Assert::IsFalse(board.Move(Coord{2,1}, Coord{2,2}), L"Knight cannot beat aside");
-
-			Logger::WriteMessage(board.Mapout().c_str());
-		}
-	};
-
-	TEST_CLASS(King_Movement_Castling)//!
-	{
-	public:
-		TEST_METHOD(Valid_Movement)
-		{
-			Desk board;
-
-			board.SetPice(Coord{0,0}, new WkNight);
-
-			board.Refresh();
-			Logger::WriteMessage(board.Mapout().c_str());
-
-			Assert::IsTrue(board.Move(Coord{0,0}, Coord{2,1}), L"Just move");
-
-			Assert::IsTrue(board.Move(Coord{2,1}, Coord{1,3}), L"Just move");
-			Assert::IsFalse(board.Move(Coord{1,3}, Coord{4,5}), L"Just wrong move ");
-			Assert::IsFalse(board.Move(Coord{1,3}, Coord{3,7}), L"Just wrong move ");
-
-			//Logger::WriteMessage(board.Mapout().c_str());
-
-		}
-
-		TEST_METHOD(Front_Enemy)
-		{
-			Desk board;
-
-			board.SetPice(Coord{0,0}, new WkNight);
-			board.SetPice(Coord{0,1}, new WBishop);
-			board.SetPice(Coord{1,0}, new WPawn);
-			board.SetPice(Coord{1,1}, new WPawn);
-
-			board.SetPice(Coord{2,1}, new BPawn);
-			board.SetPice(Coord{2,2}, new BPawn);
-
-
-			board.Refresh();
-			Logger::WriteMessage(board.Mapout().c_str());
-
-			Assert::IsTrue(board.Move(Coord{0,0}, Coord{2,1}), L"Knight can overjump and beat right down down");
-			Assert::IsFalse(board.Move(Coord{2,1}, Coord{2,2}), L"Knight cannot beat aside");
-
-			Logger::WriteMessage(board.Mapout().c_str());
-		}
-	};
 }

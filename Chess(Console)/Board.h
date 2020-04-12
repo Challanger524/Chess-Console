@@ -6,7 +6,7 @@ class Desk {
 	wstring map;
 	grid_t grid{};
 	Coord en_passant{-1,-1};
-	Coord bking, wking;
+	Coord bking{-1,-1}, wking{-1,-1};
 
 private:
 
@@ -23,19 +23,20 @@ public://main logic
 	void SetPice(const Coord pos, ChessPice *pice);
 	bool Move(const Coord from, const Coord to);
 
-	const bool Check();//
-	const bool Checkmate();//
+	const bool Check(const Coord from, const Coord to, const grid_t ngrid);
+	const bool Checkmate(const Coord king);//Hooray!
+	const bool Stalemate(const Coord from);//
 public:
 
-	const bool Save();//
-	bool Load();//
+	const bool Save();
+	bool Load();
 
 	const auto& Layout() { return grid; }
 	const auto& Mapout() { return map; }
 	
 	const void Print();
 
-	void Clear();
+	void ClearBoard();
 	void Refresh();
 	void Start() { Restart(); }
 	void Restart();

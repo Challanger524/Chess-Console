@@ -32,7 +32,8 @@ void GameLoop()
 	/*wcout << L"The Chess Game\n";
 	wcout << L"Message: Type theese commands for interaction:\n";
 	PrintHelp();
-*/
+	*/
+
 	while (loop) {
 		board.Print();
 
@@ -71,6 +72,22 @@ void GameLoop()
 		case Invalid:
 			wcout << L"Invalid input, try again.\n";
 			system("pause");
+			break;
+
+		case Save://
+			//if (!on_game) break;
+			if (!board.Save()) {
+				wcout << L"Saving failed\n";
+				system("pause");
+			}
+			break;
+
+		case Load://
+			if (!board.Load()) {
+				board.ClearBoard();
+				wcout << L"Loading failed\n";
+				system("pause");
+			}
 			break;
 
 		case Exit:

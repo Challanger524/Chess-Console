@@ -154,3 +154,12 @@ class BkNight : public kNight {
 public:
 	BkNight() { color = L'B'; }
 };
+
+struct Walker {
+	static Coord GoKing(const Coord pos);
+	static Coord GoPawn(const Coord pos);
+	static Coord GokNight(const Coord pos);
+	static Coord GoRook(const Coord pos);
+	static Coord GoBishop(const Coord pos);
+	static Coord GoQueen(const Coord pos);
+};
