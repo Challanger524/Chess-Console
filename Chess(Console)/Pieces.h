@@ -2,10 +2,10 @@
 #include "Header.h"
 
 
-class ChessPice {
+class ChessPiece {
 
 protected:
-	using grid_t = array<array<ChessPice*, CELLS>, CELLS>;
+	using grid_t = array<array<ChessPiece*, CELLS>, CELLS>;
 
 	wchar_t name{};
 	wchar_t color{};
@@ -18,10 +18,10 @@ public:
 	const bool virtual Rule(const Coord from, const Coord to, const grid_t &grid) = 0;
 };
 
-using grid_t = array<array<ChessPice*, CELLS>, CELLS>;
+using grid_t = array<array<ChessPiece*, CELLS>, CELLS>;
 
 
-class Pawn : public ChessPice {
+class Pawn : public ChessPiece {
 public:
 	Pawn() { name = L'P'; }
 
@@ -46,7 +46,7 @@ public:
 
 	const bool Rule(const Coord from, const Coord to, const grid_t &grid) override final {
 		if (from.y > to.y) return false;//if backwards(upwards)
-		if (!Pawn::Rule(from, to, grid)) return false; //default rules for all Pawns (and Pices)
+		if (!Pawn::Rule(from, to, grid)) return false; //default rules for all Pawns (and Pieces)
 		return true;
 	}
 };
@@ -62,7 +62,7 @@ public:
 };
 
 
-class Queen : public ChessPice {
+class Queen : public ChessPiece {
 public:
 	Queen() { name = L'Q'; }
 
@@ -79,7 +79,7 @@ public:
 };
 
 
-class King : public ChessPice {
+class King : public ChessPiece {
 protected:
 	bool moved = false;
 public:
@@ -101,7 +101,7 @@ public:
 };
 
 
-class Rook : public ChessPice {
+class Rook : public ChessPiece {
 	bool moved = false;
 public:
 	Rook() { name = L'R'; }
@@ -122,7 +122,7 @@ public:
 };
 
 
-class Bishop : public ChessPice {
+class Bishop : public ChessPiece {
 public :
 	Bishop() { name = L'B'; }
 
@@ -139,7 +139,7 @@ public:
 };
 
 
-class kNight : public ChessPice {
+class kNight : public ChessPiece {
 public:
 	kNight() { name = L'N'; }
 

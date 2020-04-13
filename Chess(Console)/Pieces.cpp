@@ -1,11 +1,11 @@
-#include "Pices.h"
+#include "Pieces.h"
 
-const bool ChessPice::BeatAllies(const Coord from, const Coord to, const grid_t &grid) {
+const bool ChessPiece::BeatAllies(const Coord from, const Coord to, const grid_t &grid) {
 	if (grid[to.y][to.x] == nullptr) return false;
 	return grid[from.y][from.x]->GetColr() == grid[to.y][to.x]->GetColr(); //if try to beat allies
 }
 
-const bool ChessPice::Rule(const Coord from, const Coord to, const grid_t &grid)
+const bool ChessPiece::Rule(const Coord from, const Coord to, const grid_t &grid)
 {
 	if (BeatAllies(from, to, grid)) return false;
 
@@ -58,7 +58,7 @@ const bool Pawn::Rule(const Coord from, const Coord to, const grid_t &grid)
 {
 	if (from.x == to.x && grid[to.y][to.x] != nullptr) return false;//cannot beat forwards |bad|
 
-	if (!ChessPice::Rule(from, to, grid)) return false;//if try to overjump something |bad|
+	if (!ChessPiece::Rule(from, to, grid)) return false;//if try to overjump something |bad|
 
 	if (dist(from.x, to.x) == 0 && dist(from.y, to.y) == 2)//if two cells movement is first
 	{
@@ -78,7 +78,7 @@ const bool Pawn::Rule(const Coord from, const Coord to, const grid_t &grid)
 
 const bool Queen::Rule(const Coord from, const Coord to, const grid_t &grid)
 {
-	if (!ChessPice::Rule(from, to, grid)) return false;//if try to overjump something |bad|
+	if (!ChessPiece::Rule(from, to, grid)) return false;//if try to overjump something |bad|
 
 	if (dist(from.x, to.x) == dist(from.y, to.y)) return true;//diagnoal movment |good|
 
@@ -91,7 +91,7 @@ const bool Queen::Rule(const Coord from, const Coord to, const grid_t &grid)
 
 const bool King::Rule(const Coord from, const Coord to, const grid_t &grid)
 {
-	if (!ChessPice::Rule(from, to, grid)) return false;//if try to overjump something |bad|
+	if (!ChessPiece::Rule(from, to, grid)) return false;//if try to overjump something |bad|
 
 	if (from.y == to.y && dist(from.x, to.x) == 2) //if Castling
 	{
@@ -122,7 +122,7 @@ const bool King::Rule(const Coord from, const Coord to, const grid_t &grid)
 
 const bool Rook::Rule(const Coord from, const Coord to, const grid_t &grid)
 {
-	if (!ChessPice::Rule(from, to, grid)) return false;//if try to overjump something |bad|
+	if (!ChessPiece::Rule(from, to, grid)) return false;//if try to overjump something |bad|
 
 	if (from.x == to.x && from.y != to.y) return true;//vertical movement |good|
 
@@ -133,7 +133,7 @@ const bool Rook::Rule(const Coord from, const Coord to, const grid_t &grid)
 
 const bool Bishop::Rule(const Coord from, const Coord to, const grid_t &grid)
 {
-	if (!ChessPice::Rule(from, to, grid)) return false;//if try to overjump something |bad|
+	if (!ChessPiece::Rule(from, to, grid)) return false;//if try to overjump something |bad|
 
 	if (dist(from.x, to.x) == dist(from.y, to.y)) return true;//diagnoal movment |good|
 

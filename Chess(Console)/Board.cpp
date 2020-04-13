@@ -4,7 +4,7 @@
 
 void Desk::PreciseUpdate(const Coord from, const Coord to)
 {
-	//assert((from != to && grid[to.y][to.x] != nullptr) && L"cell for pice write must not be empty");//always triggering
+	//assert((from != to && grid[to.y][to.x] != nullptr) && L"cell for piece write must not be empty");//always triggering
 
 	size_t cell = (FIRST_CELL_Y + from.y * 2) * WIDTH + FIRST_CELL_X + from.x * 3;//Update 'from' cell
 	if ((from.x + from.y) % 2 == 0) { //if cell should be painted - paint
@@ -40,15 +40,15 @@ bool Desk::IfEnPassant(const Coord from, const Coord to)
 
 		if (en_passant) {//if second enp in row after expired first
 			if (grid[en_passant.y][en_passant.x]->GetName() == L'p') {
-				ErasePice(en_passant);
+				ErasePiece(en_passant);
 				PreciseUpdate(en_passant, en_passant);
 			}
 		}
 
 		en_passant = Coord{(from.y + to.y) / 2, from.x};
 
-		SetPice(to, grid[from.y][from.x]);
-		SetPice(en_passant, new EnPawn(grid[from.y][from.x]->GetColr()));
+		SetPiece(to, grid[from.y][from.x]);
+		SetPiece(en_passant, new EnPawn(grid[from.y][from.x]->GetColr()));
 		grid[from.y][from.x] = nullptr;
 
 
@@ -59,28 +59,28 @@ bool Desk::IfEnPassant(const Coord from, const Coord to)
 	return enpass;
 }
 
-void Desk::ErasePice(const Coord pos) {
+void Desk::ErasePiece(const Coord pos) {
 	assert(pos.x >= 0 && pos.y >= 0 && L"Coord must be positive");
 	assert(pos.x < 9 && pos.y < 9 && L"Coord must be less then 9");
-	assert(grid[pos.y][pos.x] != nullptr && L"Pice for erase must exist");
+	assert(grid[pos.y][pos.x] != nullptr && L"Piece for erase must exist");
 
 	delete grid[pos.y][pos.x];
 	grid[pos.y][pos.x] = nullptr;
 }
 
-void Desk::SetPice(const Coord pos, ChessPice *pice) {
+void Desk::SetPiece(const Coord pos, ChessPiece *piece) {
 	assert(pos.x >= 0 && pos.y >= 0 && L"Coord must be positive");
 	assert(pos.x < 9 && pos.y < 9 && L"Coord must be less then 9");
-	assert(pice != nullptr && L"Pice for insert must exist");
+	assert(piece != nullptr && L"Piece for insert must exist");
 
-	if (pice->GetName() == L'K') {
-		if (pice->GetColr() == L'W') wking = pos;
+	if (piece->GetName() == L'K') {
+		if (piece->GetColr() == L'W') wking = pos;
 		else bking = pos;
 	}
 
 	if (grid[pos.y][pos.x] != nullptr) delete grid[pos.y][pos.x];
-	grid[pos.y][pos.x] = move(pice);
-	//pice = nullptr;//!!! make 'pice' invalid after SetPice() call!!!
+	grid[pos.y][pos.x] = move(piece);
+	//piece = nullptr;//!!! make 'piece' invalid after SetPiece() call!!!
 }
 
 bool Desk::Move(const Coord from, const Coord to)
@@ -120,10 +120,10 @@ bool Desk::Move(const Coord from, const Coord to)
 	{
 		Coord intercepted{from.y, en_passant.x};
 
-		SetPice(to, grid[from.y][from.x]);
+		SetPiece(to, grid[from.y][from.x]);
 		grid[from.y][from.x] = nullptr;
 
-		ErasePice(intercepted);
+		ErasePiece(intercepted);
 
 		PreciseUpdate(from, to);
 		PreciseUpdate(intercepted, intercepted);//for intercepted's cell painting
@@ -135,27 +135,27 @@ bool Desk::Move(const Coord from, const Coord to)
 		switch (GetInput())//!! > INPUT from user !!
 		{
 		case L'1':
-			if (grid[from.y][from.x]->GetColr() == L'W') SetPice(to, new WkNight);
-			else SetPice(to, new BkNight);
+			if (grid[from.y][from.x]->GetColr() == L'W') SetPiece(to, new WkNight);
+			else SetPiece(to, new BkNight);
 			break;
 
 		case L'2':
-			if (grid[from.y][from.x]->GetColr() == L'W') SetPice(to, new WRook);
-			else SetPice(to, new BRook);
+			if (grid[from.y][from.x]->GetColr() == L'W') SetPiece(to, new WRook);
+			else SetPiece(to, new BRook);
 			break;
 
 		case L'3':
-			if (grid[from.y][from.x]->GetColr() == L'W') SetPice(to, new WBishop);
-			else SetPice(to, new BBishop);
+			if (grid[from.y][from.x]->GetColr() == L'W') SetPiece(to, new WBishop);
+			else SetPiece(to, new BBishop);
 			break;
 
 		default://Queen
-			if (grid[from.y][from.x]->GetColr() == L'W') SetPice(to, new WQueen);
-			else SetPice(to, new BQueen);
+			if (grid[from.y][from.x]->GetColr() == L'W') SetPiece(to, new WQueen);
+			else SetPiece(to, new BQueen);
 			break;
 		}
 
-		ErasePice(from);
+		ErasePiece(from);
 		PreciseUpdate(from, to);
 	}
 	else if (grid[from.y][from.x]->GetName() == L'K')
@@ -165,7 +165,7 @@ bool Desk::Move(const Coord from, const Coord to)
 			Coord rook_from, rook_to;
 
 			static_cast<King*>(grid[from.y][from.x])->YesMoved();
-			SetPice(to, grid[from.y][from.x]);//move the King
+			SetPiece(to, grid[from.y][from.x]);//move the King
 			grid[from.y][from.x] = nullptr;
 
 			//define Rook's movement
@@ -180,13 +180,13 @@ bool Desk::Move(const Coord from, const Coord to)
 
 			//move the Rook
 			static_cast<Rook*>(grid[rook_from.y][rook_from.x])->YesMoved();
-			SetPice(rook_to, grid[rook_from.y][rook_from.x]);
+			SetPiece(rook_to, grid[rook_from.y][rook_from.x]);
 			grid[rook_from.y][rook_from.x] = nullptr;
 			PreciseUpdate(rook_from, rook_to);
 		}
 		else {//King just moves
 			static_cast<King*>(grid[from.y][from.x])->YesMoved();
-			SetPice(to, grid[from.y][from.x]);
+			SetPiece(to, grid[from.y][from.x]);
 			grid[from.y][from.x] = nullptr;
 		}
 
@@ -200,7 +200,7 @@ bool Desk::Move(const Coord from, const Coord to)
 		if (grid[from.y][from.x]->GetName() == L'R') //if Rook moves
 			static_cast<Rook*>(grid[from.y][from.x])->YesMoved();
 
-		SetPice(to, grid[from.y][from.x]);
+		SetPiece(to, grid[from.y][from.x]);
 		grid[from.y][from.x] = nullptr;
 
 		PreciseUpdate(from, to);
@@ -208,7 +208,7 @@ bool Desk::Move(const Coord from, const Coord to)
 
 	if (en_passant) {//if ability expired
 		if (grid[en_passant.y][en_passant.x]->GetName() == L'p') {
-			ErasePice(en_passant);
+			ErasePiece(en_passant);
 			PreciseUpdate(en_passant, en_passant);
 		}
 		en_passant = {-1, -1};
@@ -218,7 +218,7 @@ bool Desk::Move(const Coord from, const Coord to)
 }
 
 unsigned short Desk::GetInput() {
-	wcout << L"Promotion: which pice do you choose:\n"
+	wcout << L"Promotion: which piece do you choose:\n"
 		"0 - Queen, 1 - Knight, 2 - Rook, 3 - Bishop: ";
 	return wcin.get();
 }
@@ -345,7 +345,7 @@ bool Desk::Load() {
 
 				if (red == L'R') {
 					bool moved;
-					SetPice(Coord{y,x}, new WRook);
+					SetPiece(Coord{y,x}, new WRook);
 
 					if (save.eof()) return false;
 					save >> moved;
@@ -354,7 +354,7 @@ bool Desk::Load() {
 				}
 				else if (red == L'K') {
 					bool moved;
-					SetPice(Coord{y,x}, new WKing);
+					SetPiece(Coord{y,x}, new WKing);
 					wking = Coord{y,x};
 
 					if (save.eof()) return false;
@@ -362,11 +362,11 @@ bool Desk::Load() {
 
 					if (moved) static_cast<King*>(grid[y][x])->YesMoved();
 				}
-				else if (red == L'p') SetPice(Coord{y,x}, new EnPawn(L'W'));
-				else if (red == L'P') SetPice(Coord{y,x}, new WPawn);
-				else if (red == L'B') SetPice(Coord{y,x}, new WBishop);
-				else if (red == L'N') SetPice(Coord{y,x}, new WkNight);
-				else if (red == L'Q') SetPice(Coord{y,x}, new WQueen);
+				else if (red == L'p') SetPiece(Coord{y,x}, new EnPawn(L'W'));
+				else if (red == L'P') SetPiece(Coord{y,x}, new WPawn);
+				else if (red == L'B') SetPiece(Coord{y,x}, new WBishop);
+				else if (red == L'N') SetPiece(Coord{y,x}, new WkNight);
+				else if (red == L'Q') SetPiece(Coord{y,x}, new WQueen);
 				else return false;
 			}
 			else if (red == L'B')
@@ -376,7 +376,7 @@ bool Desk::Load() {
 
 				if (red == L'R') {
 					bool moved;
-					SetPice(Coord{y,x}, new BRook);
+					SetPiece(Coord{y,x}, new BRook);
 
 					if (save.eof()) return false;
 					save >> moved;
@@ -385,7 +385,7 @@ bool Desk::Load() {
 				}
 				else if (red == L'K') {
 					bool moved;
-					SetPice(Coord{y,x}, new BKing);
+					SetPiece(Coord{y,x}, new BKing);
 					wking = Coord{y,x};
 
 					if (save.eof()) return false;
@@ -393,11 +393,11 @@ bool Desk::Load() {
 
 					if (moved) static_cast<King*>(grid[y][x])->YesMoved();
 				}
-				else if (red == L'p') SetPice(Coord{y,x}, new EnPawn(L'B'));
-				else if (red == L'P') SetPice(Coord{y,x}, new BPawn);
-				else if (red == L'B') SetPice(Coord{y,x}, new BBishop);
-				else if (red == L'N') SetPice(Coord{y,x}, new BkNight);
-				else if (red == L'Q') SetPice(Coord{y,x}, new BQueen);
+				else if (red == L'p') SetPiece(Coord{y,x}, new EnPawn(L'B'));
+				else if (red == L'P') SetPiece(Coord{y,x}, new BPawn);
+				else if (red == L'B') SetPiece(Coord{y,x}, new BBishop);
+				else if (red == L'N') SetPiece(Coord{y,x}, new BkNight);
+				else if (red == L'Q') SetPiece(Coord{y,x}, new BQueen);
 				else return false;
 			}
 			else return false;
@@ -410,7 +410,7 @@ bool Desk::Load() {
 
 
 const bool Desk::Check(const Coord from, const Coord to, const grid_t ngrid)
-{//if any opponent's pice can strike the king
+{//if any opponent's piece can strike the king
 	Coord king;
 	assert(ngrid[from.y][from.x] != nullptr);
 

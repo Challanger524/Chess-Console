@@ -1,6 +1,6 @@
 #pragma once
 #include "Header.h"
-#include "Pices.h"
+#include "Pieces.h"
 
 class Desk {
 	wstring map;
@@ -19,8 +19,8 @@ private:
 	unsigned short GetInput();
 public://main logic
 
-	void ErasePice(const Coord pos);
-	void SetPice(const Coord pos, ChessPice *pice);
+	void ErasePiece(const Coord pos);
+	void SetPiece(const Coord pos, ChessPiece *piece);
 	bool Move(const Coord from, const Coord to);
 
 	const bool Check(const Coord from, const Coord to, const grid_t ngrid);

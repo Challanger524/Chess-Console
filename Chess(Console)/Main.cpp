@@ -99,9 +99,9 @@ void GameLoop()
 				Coord from{input[1] - L'1',input[0] - L'a'};
 				Coord to{input[3] - L'1', input[2] - L'a'};
 
-				if (board.Layout()[from.y][from.x] == nullptr) wcout << L"You choosed no pice\n";
-				else if (current->GetSide() != board.Layout()[from.y][from.x]->GetColr()) wcout << L"You tried to move your oponent's pice\n";
-				else if (board.Layout()[to.y][to.x] != nullptr && current->GetSide() == board.Layout()[to.y][to.x]->GetColr()) wcout << L"You tried to move onto your own pice\n";
+				if (board.Layout()[from.y][from.x] == nullptr) wcout << L"You choosed no piece\n";
+				else if (current->GetSide() != board.Layout()[from.y][from.x]->GetColr()) wcout << L"You tried to move your oponent's piece\n";
+				else if (board.Layout()[to.y][to.x] != nullptr && current->GetSide() == board.Layout()[to.y][to.x]->GetColr()) wcout << L"You tried to move onto your own piece\n";
 				else
 				{
 					if (board.Move(from, to)) {

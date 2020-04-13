@@ -24,7 +24,7 @@
     <ClCompile Include="Board.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="Pices.cpp">
+    <ClCompile Include="Pieces.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
@@ -38,7 +38,7 @@
     <ClInclude Include="Board.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="Pices.h">
+    <ClInclude Include="Pieces.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

@@ -2,7 +2,7 @@
 #include "CppUnitTest.h"
 #include "..\Chess(console)\Header.h"
 #include "..\Chess(console)\UInterface.cpp"
-#include "..\Chess(console)\Pices.cpp"
+#include "..\Chess(console)\Pieces.cpp"
 #include "..\Chess(console)\Board.h"
 #include "..\Chess(console)\Board.cpp"
 #include "..\Chess(console)\Main.cpp"
@@ -63,7 +63,7 @@ namespace UnitTest_for_Chess
 		{
 			Desk board;
 
-			board.SetPice(Coord{1,1}, new WPawn);
+			board.SetPiece(Coord{1,1}, new WPawn);
 
 			board.Refresh();
 			Logger::WriteMessage(board.Mapout().c_str());
@@ -82,9 +82,9 @@ namespace UnitTest_for_Chess
 		{
 			Desk board;
 
-			board.SetPice(Coord{1,1}, new WPawn);
-			board.SetPice(Coord{2,1}, new BPawn);
-			board.SetPice(Coord{2,2}, new BPawn);
+			board.SetPiece(Coord{1,1}, new WPawn);
+			board.SetPiece(Coord{2,1}, new BPawn);
+			board.SetPiece(Coord{2,2}, new BPawn);
 
 
 			board.Refresh();
@@ -101,14 +101,14 @@ namespace UnitTest_for_Chess
 		{
 			Desk board;
 
-			board.SetPice(Coord{1,1}, new WPawn);
-			board.SetPice(Coord{2,2}, new WPawn);
-			board.SetPice(Coord{2,1}, new WPawn);
+			board.SetPiece(Coord{1,1}, new WPawn);
+			board.SetPiece(Coord{2,2}, new WPawn);
+			board.SetPiece(Coord{2,1}, new WPawn);
 
 			board.Refresh();
 			Logger::WriteMessage(board.Mapout().c_str());
 
-			Assert::IsFalse(board.Move(Coord{1,1}, Coord{2,2}), L"Pices cannot beat allies");//try to beat front
+			Assert::IsFalse(board.Move(Coord{1,1}, Coord{2,2}), L"Pieces cannot beat allies");//try to beat front
 			Assert::IsFalse(board.Move(Coord{1,1}, Coord{3,1}), L"Pawns cannot overjump");//try to overjump allies
 
 			//Logger::WriteMessage(board.Mapout().c_str());
@@ -122,7 +122,7 @@ namespace UnitTest_for_Chess
 		{
 			Desk board;
 
-			board.SetPice(Coord{3,4}, new BRook);
+			board.SetPiece(Coord{3,4}, new BRook);
 
 			board.Refresh();
 			//Logger::WriteMessage(board.Mapout().c_str());
@@ -140,9 +140,9 @@ namespace UnitTest_for_Chess
 		{
 			Desk board;
 
-			board.SetPice(Coord{1,1}, new WRook);
-			board.SetPice(Coord{2,1}, new BPawn);
-			board.SetPice(Coord{2,2}, new BPawn);
+			board.SetPiece(Coord{1,1}, new WRook);
+			board.SetPiece(Coord{2,1}, new BPawn);
+			board.SetPiece(Coord{2,2}, new BPawn);
 
 
 			board.Refresh();
@@ -163,7 +163,7 @@ namespace UnitTest_for_Chess
 		{
 			Desk board;
 
-			board.SetPice(Coord{0,0}, new WBishop);
+			board.SetPiece(Coord{0,0}, new WBishop);
 
 			board.Refresh();
 			Logger::WriteMessage(board.Mapout().c_str());
@@ -180,9 +180,9 @@ namespace UnitTest_for_Chess
 		{
 			Desk board;
 
-			board.SetPice(Coord{1,1}, new WBishop);
-			board.SetPice(Coord{2,1}, new BPawn);
-			board.SetPice(Coord{2,2}, new BPawn);
+			board.SetPiece(Coord{1,1}, new WBishop);
+			board.SetPiece(Coord{2,1}, new BPawn);
+			board.SetPiece(Coord{2,2}, new BPawn);
 
 
 			board.Refresh();
@@ -203,7 +203,7 @@ namespace UnitTest_for_Chess
 		{
 			Desk board;
 
-			board.SetPice(Coord{0,0}, new WkNight);
+			board.SetPiece(Coord{0,0}, new WkNight);
 
 			board.Refresh();
 			Logger::WriteMessage(board.Mapout().c_str());
@@ -222,13 +222,13 @@ namespace UnitTest_for_Chess
 		{
 			Desk board;
 
-			board.SetPice(Coord{0,0}, new WkNight);
-			board.SetPice(Coord{0,1}, new WBishop);
-			board.SetPice(Coord{1,0}, new WPawn);
-			board.SetPice(Coord{1,1}, new WPawn);
+			board.SetPiece(Coord{0,0}, new WkNight);
+			board.SetPiece(Coord{0,1}, new WBishop);
+			board.SetPiece(Coord{1,0}, new WPawn);
+			board.SetPiece(Coord{1,1}, new WPawn);
 
-			board.SetPice(Coord{2,1}, new BPawn);
-			board.SetPice(Coord{2,2}, new BPawn);
+			board.SetPiece(Coord{2,1}, new BPawn);
+			board.SetPiece(Coord{2,2}, new BPawn);
 
 
 			board.Refresh();
@@ -248,9 +248,9 @@ namespace UnitTest_for_Chess
 		{
 			Desk board;
 
-			board.SetPice(Coord{3,3}, new WQueen);
-			board.SetPice(Coord{5,5}, new BQueen);
-			board.SetPice(Coord{3,5}, new BRook);
+			board.SetPiece(Coord{3,3}, new WQueen);
+			board.SetPiece(Coord{5,5}, new BQueen);
+			board.SetPiece(Coord{3,5}, new BRook);
 
 			board.Refresh();
 			Logger::WriteMessage(board.Mapout().c_str());
@@ -271,16 +271,16 @@ namespace UnitTest_for_Chess
 		{
 			Desk board;
 
-			board.SetPice(Coord{7,4}, new BKing);
-			board.SetPice(Coord{7,0}, new BRook);
-			board.SetPice(Coord{7,7}, new WRook);
+			board.SetPiece(Coord{7,4}, new BKing);
+			board.SetPiece(Coord{7,0}, new BRook);
+			board.SetPiece(Coord{7,7}, new WRook);
 
 			board.Refresh();
 			Logger::WriteMessage(board.Mapout().c_str());
 
 			Assert::IsFalse(board.Move(Coord{7,4}, Coord{7,6}), L"Cannot castle with enemy Rook");
 
-			board.ErasePice(Coord{7,7});//erase White Rook to avoid Check
+			board.ErasePiece(Coord{7,7});//erase White Rook to avoid Check
 			board.Refresh();
 
 			Assert::IsTrue(board.Move(Coord{7,4}, Coord{7,2}), L"Just Castle");
@@ -292,9 +292,9 @@ namespace UnitTest_for_Chess
 		{
 			Desk board;
 
-			board.SetPice(Coord{0,4}, new WKing);
-			board.SetPice(Coord{0,7}, new WRook);
-			board.SetPice(Coord{1,3}, new BPawn);
+			board.SetPiece(Coord{0,4}, new WKing);
+			board.SetPiece(Coord{0,7}, new WRook);
+			board.SetPiece(Coord{1,3}, new BPawn);
 
 			board.Refresh();
 			Logger::WriteMessage(board.Mapout().c_str());
@@ -305,7 +305,7 @@ namespace UnitTest_for_Chess
 
 			Assert::IsFalse(board.Move(Coord{0,4}, Coord{0,6}), L"King cannot Castle after movement");
 
-			board.SetPice(Coord{2,4}, new BPawn);//for Check triggering
+			board.SetPiece(Coord{2,4}, new BPawn);//for Check triggering
 			board.Refresh();
 
 			Assert::IsFalse(board.Move(Coord{0,4}, Coord{1,5}), L"King cannot move to a Check position");
@@ -322,8 +322,8 @@ namespace UnitTest_for_Chess
 		{
 			Desk board;
 
-			board.SetPice(Coord{1,1}, new WPawn);
-			board.SetPice(Coord{3,2}, new BPawn);
+			board.SetPiece(Coord{1,1}, new WPawn);
+			board.SetPiece(Coord{3,2}, new BPawn);
 
 			board.Refresh();
 			Logger::WriteMessage(board.Mapout().c_str());
@@ -337,8 +337,8 @@ namespace UnitTest_for_Chess
 		{
 			Desk board;
 
-			board.SetPice(Coord{1,1}, new WPawn);
-			board.SetPice(Coord{3,2}, new BPawn);
+			board.SetPiece(Coord{1,1}, new WPawn);
+			board.SetPiece(Coord{3,2}, new BPawn);
 
 			board.Refresh();
 			Logger::WriteMessage(board.Mapout().c_str());
@@ -354,8 +354,8 @@ namespace UnitTest_for_Chess
 		{
 			Desk board;
 
-			board.SetPice(Coord{1,1}, new WPawn);
-			board.SetPice(Coord{3,2}, new BPawn);
+			board.SetPiece(Coord{1,1}, new WPawn);
+			board.SetPiece(Coord{3,2}, new BPawn);
 
 			board.Refresh();
 			Logger::WriteMessage(board.Mapout().c_str());
@@ -378,7 +378,7 @@ namespace UnitTest_for_Chess
 		Coord bking, wking;
 
 		unsigned short GetInput() {//fake input
-			//wcout << L"Promotion: which pice do you choose:\n"
+			//wcout << L"Promotion: which piece do you choose:\n"
 			//	"0 - Queen";
 			return L'b';//  <-- L'<for change>'
 		}
@@ -416,8 +416,8 @@ namespace UnitTest_for_Chess
 			if (enpass) {//if EnPassant can occur - leve a mark
 				en_passant = Coord{(from.y + to.y) / 2, from.x};
 
-				SetPice(to, grid[from.y][from.x]);
-				SetPice(en_passant, new EnPawn(grid[from.y][from.x]->GetColr()));
+				SetPiece(to, grid[from.y][from.x]);
+				SetPiece(en_passant, new EnPawn(grid[from.y][from.x]->GetColr()));
 				grid[from.y][from.x] = nullptr;
 
 
@@ -427,22 +427,22 @@ namespace UnitTest_for_Chess
 
 			return enpass;
 		}
-		void ErasePice(const Coord pos) {
+		void ErasePiece(const Coord pos) {
 			assert(pos.x >= 0 && pos.y >= 0 && L"Coord must be positive");
 			assert(pos.x < 9 && pos.y < 9 && L"Coord must be less then 9");
-			assert(grid[pos.y][pos.x] != nullptr && L"Pice for erase must exist");
+			assert(grid[pos.y][pos.x] != nullptr && L"Piece for erase must exist");
 
 			delete grid[pos.y][pos.x];
 			grid[pos.y][pos.x] = nullptr;
 		}
-		void SetPice(const Coord pos, ChessPice *pice) {
+		void SetPiece(const Coord pos, ChessPiece *piece) {
 			assert(pos.x >= 0 && pos.y >= 0 && L"Coord must be positive");
 			assert(pos.x < 9 && pos.y < 9 && L"Coord must be less then 9");
-			assert(pice != nullptr && L"Pice for insert must exist");
+			assert(piece != nullptr && L"Piece for insert must exist");
 
 			if (grid[pos.y][pos.x] != nullptr) delete grid[pos.y][pos.x];
-			grid[pos.y][pos.x] = move(pice);
-			//pice = nullptr;//!!! make 'pice' invalid after SetPice() call!!!
+			grid[pos.y][pos.x] = move(piece);
+			//piece = nullptr;//!!! make 'piece' invalid after SetPiece() call!!!
 		}
 		bool Move(const Coord from, const Coord to)
 		{
@@ -453,10 +453,10 @@ namespace UnitTest_for_Chess
 			{
 				Coord intercepted{from.y, en_passant.x};
 
-				SetPice(to, grid[from.y][from.x]);
+				SetPiece(to, grid[from.y][from.x]);
 				grid[from.y][from.x] = nullptr;
 
-				ErasePice(intercepted);
+				ErasePiece(intercepted);
 
 				PreciseUpdate(from, to);
 				PreciseUpdate(intercepted, intercepted);//for intercepted's cell painting
@@ -468,27 +468,27 @@ namespace UnitTest_for_Chess
 				switch (GetInput())
 				{
 				case L'1':
-					if (grid[from.y][from.x]->GetColr() == L'W') SetPice(to, new WkNight);
-					else SetPice(to, new BkNight);
+					if (grid[from.y][from.x]->GetColr() == L'W') SetPiece(to, new WkNight);
+					else SetPiece(to, new BkNight);
 					break;
 
 				case L'2':
-					if (grid[from.y][from.x]->GetColr() == L'W') SetPice(to, new WRook);
-					else SetPice(to, new BRook);
+					if (grid[from.y][from.x]->GetColr() == L'W') SetPiece(to, new WRook);
+					else SetPiece(to, new BRook);
 					break;
 
 				case L'3':
-					if (grid[from.y][from.x]->GetColr() == L'W') SetPice(to, new WBishop);
-					else SetPice(to, new BBishop);
+					if (grid[from.y][from.x]->GetColr() == L'W') SetPiece(to, new WBishop);
+					else SetPiece(to, new BBishop);
 					break;
 
 				default://Queen
-					if (grid[from.y][from.x]->GetColr() == L'W') SetPice(to, new WQueen);
-					else SetPice(to, new BQueen);
+					if (grid[from.y][from.x]->GetColr() == L'W') SetPiece(to, new WQueen);
+					else SetPiece(to, new BQueen);
 					break;
 				}
 
-				ErasePice(from);
+				ErasePiece(from);
 				PreciseUpdate(from, to);
 			}
 			else if (grid[from.y][from.x]->GetName() == L'K')
@@ -498,7 +498,7 @@ namespace UnitTest_for_Chess
 					Coord rook_from, rook_to;
 
 					static_cast<King*>(grid[from.y][from.x])->YesMoved();
-					SetPice(to, grid[from.y][from.x]);//move the King
+					SetPiece(to, grid[from.y][from.x]);//move the King
 					grid[from.y][from.x] = nullptr;
 
 					//define Rook's movement
@@ -513,13 +513,13 @@ namespace UnitTest_for_Chess
 
 					//move the Rook
 					static_cast<Rook*>(grid[rook_from.y][rook_from.x])->YesMoved();
-					SetPice(rook_to, grid[rook_from.y][rook_from.x]);
+					SetPiece(rook_to, grid[rook_from.y][rook_from.x]);
 					grid[rook_from.y][rook_from.x] = nullptr;
 					PreciseUpdate(rook_from, rook_to);
 				}
 				else {//King just moves
 					static_cast<King*>(grid[from.y][from.x])->YesMoved();
-					SetPice(to, grid[from.y][from.x]);
+					SetPiece(to, grid[from.y][from.x]);
 					grid[from.y][from.x] = nullptr;
 				}
 
@@ -533,7 +533,7 @@ namespace UnitTest_for_Chess
 				if (grid[from.y][from.x]->GetName() == L'R') //if Rook moves
 					static_cast<Rook*>(grid[from.y][from.x])->YesMoved();
 
-				SetPice(to, grid[from.y][from.x]);
+				SetPiece(to, grid[from.y][from.x]);
 				grid[from.y][from.x] = nullptr;
 
 				PreciseUpdate(from, to);
@@ -541,7 +541,7 @@ namespace UnitTest_for_Chess
 
 			if (en_passant) {//if ability expired
 				if (grid[en_passant.y][en_passant.x]->GetName() == L'p') {
-					ErasePice(en_passant);
+					ErasePiece(en_passant);
 					PreciseUpdate(en_passant, en_passant);
 				}
 				en_passant = {-1, -1};
@@ -588,9 +588,9 @@ namespace UnitTest_for_Chess
 		TEST_METHOD(Test_1) {
 			Desk board;
 
-			board.SetPice(Coord{0,4}, new WKing);
-			board.SetPice(Coord{2,3}, new BPawn);
-			board.SetPice(Coord{2,6}, new BkNight);
+			board.SetPiece(Coord{0,4}, new WKing);
+			board.SetPiece(Coord{2,3}, new BPawn);
+			board.SetPiece(Coord{2,6}, new BkNight);
 
 			board.Refresh();
 			Logger::WriteMessage(board.Mapout().c_str());
@@ -608,12 +608,12 @@ namespace UnitTest_for_Chess
 		TEST_METHOD(Test_0) {//!!!make king
 			Desk board;
 
-			board.SetPice(Coord{2,2}, new BKing);
-			board.SetPice(Coord{1,4}, new BPawn);
+			board.SetPiece(Coord{2,2}, new BKing);
+			board.SetPiece(Coord{1,4}, new BPawn);
 
-			board.SetPice(Coord{1,6}, new WRook);
-			board.SetPice(Coord{2,6}, new WRook);
-			board.SetPice(Coord{3,6}, new WRook);
+			board.SetPiece(Coord{1,6}, new WRook);
+			board.SetPiece(Coord{2,6}, new WRook);
+			board.SetPiece(Coord{3,6}, new WRook);
 
 			board.Refresh();
 			Logger::WriteMessage(board.Mapout().c_str());
@@ -627,10 +627,10 @@ namespace UnitTest_for_Chess
 		TEST_METHOD(Test_1) {
 			Desk board;
 
-			board.SetPice(Coord{2,2}, new WKing);
-			board.SetPice(Coord{1,3}, new WPawn);
+			board.SetPiece(Coord{2,2}, new WKing);
+			board.SetPiece(Coord{1,3}, new WPawn);
 
-			board.SetPice(Coord{2,6}, new BRook);
+			board.SetPiece(Coord{2,6}, new BRook);
 
 			board.Refresh();
 			Logger::WriteMessage(board.Mapout().c_str());
@@ -644,11 +644,11 @@ namespace UnitTest_for_Chess
 		TEST_METHOD(Test_2) {//untill no GOKing()!!!
 			Desk board;
 
-			board.SetPice(Coord{2,2}, new WKing);
-			board.SetPice(Coord{1,3}, new WPawn);
+			board.SetPiece(Coord{2,2}, new WKing);
+			board.SetPiece(Coord{1,3}, new WPawn);
 
-			board.SetPice(Coord{7,0}, new BQueen);
-			board.SetPice(Coord{2,6}, new BRook);
+			board.SetPiece(Coord{7,0}, new BQueen);
+			board.SetPiece(Coord{2,6}, new BRook);
 
 			board.Refresh();
 			Logger::WriteMessage(board.Mapout().c_str());
@@ -666,9 +666,9 @@ namespace UnitTest_for_Chess
 			Logger::WriteMessage(board.Mapout().c_str());
 
 
-			board.SetPice(Coord{7,0}, new BQueen);
-			board.SetPice(Coord{7,1}, new BQueen);
-			board.SetPice(Coord{7,3}, new BQueen);
+			board.SetPiece(Coord{7,0}, new BQueen);
+			board.SetPiece(Coord{7,1}, new BQueen);
+			board.SetPiece(Coord{7,3}, new BQueen);
 
 			board.Refresh();
 			Logger::WriteMessage(board.Mapout().c_str());
@@ -680,12 +680,12 @@ namespace UnitTest_for_Chess
 		TEST_METHOD(Test_3) {
 			Desk board;
 
-			board.SetPice(Coord{2,2}, new BKing);
-			board.SetPice(Coord{1,4}, new BkNight);
+			board.SetPiece(Coord{2,2}, new BKing);
+			board.SetPiece(Coord{1,4}, new BkNight);
 
-			board.SetPice(Coord{1,6}, new WRook);
-			board.SetPice(Coord{2,6}, new WRook);
-			board.SetPice(Coord{3,6}, new WRook);
+			board.SetPiece(Coord{1,6}, new WRook);
+			board.SetPiece(Coord{2,6}, new WRook);
+			board.SetPiece(Coord{3,6}, new WRook);
 
 			board.Refresh();
 			Logger::WriteMessage(board.Mapout().c_str());
@@ -699,13 +699,13 @@ namespace UnitTest_for_Chess
 		TEST_METHOD(Test_4) {
 			Desk board;
 
-			board.SetPice(Coord{2,2}, new BKing);
-			//board.SetPice(Coord{1,4}, new BPawn);
-			board.SetPice(Coord{0,4}, new BRook);
+			board.SetPiece(Coord{2,2}, new BKing);
+			//board.SetPiece(Coord{1,4}, new BPawn);
+			board.SetPiece(Coord{0,4}, new BRook);
 
-			board.SetPice(Coord{1,6}, new WRook);
-			board.SetPice(Coord{2,6}, new WRook);
-			board.SetPice(Coord{3,6}, new WRook);
+			board.SetPiece(Coord{1,6}, new WRook);
+			board.SetPiece(Coord{2,6}, new WRook);
+			board.SetPiece(Coord{3,6}, new WRook);
 
 			board.Refresh();
 			Logger::WriteMessage(board.Mapout().c_str());
@@ -719,14 +719,14 @@ namespace UnitTest_for_Chess
 		TEST_METHOD(Test_5) {
 			Desk board;
 
-			board.SetPice(Coord{2,2}, new BKing);
-			//board.SetPice(Coord{0,4}, new BBishop);
-			//board.SetPice(Coord{5,3}, new BBishop);
-			board.SetPice(Coord{1,7}, new BBishop);
+			board.SetPiece(Coord{2,2}, new BKing);
+			//board.SetPiece(Coord{0,4}, new BBishop);
+			//board.SetPiece(Coord{5,3}, new BBishop);
+			board.SetPiece(Coord{1,7}, new BBishop);
 
-			board.SetPice(Coord{1,6}, new WRook);
-			board.SetPice(Coord{2,6}, new WRook);
-			board.SetPice(Coord{3,6}, new WRook);
+			board.SetPiece(Coord{1,6}, new WRook);
+			board.SetPiece(Coord{2,6}, new WRook);
+			board.SetPiece(Coord{3,6}, new WRook);
 
 			board.Refresh();
 			Logger::WriteMessage(board.Mapout().c_str());
@@ -740,15 +740,15 @@ namespace UnitTest_for_Chess
 		TEST_METHOD(Test_6) {
 			Desk board;
 
-			board.SetPice(Coord{2,2}, new BKing);
-			//board.SetPice(Coord{0,4}, new BQueen);
-			//board.SetPice(Coord{5,3}, new BQueen);
-			//board.SetPice(Coord{1,7}, new BQueen);
-			board.SetPice(Coord{2,7}, new BQueen);
+			board.SetPiece(Coord{2,2}, new BKing);
+			//board.SetPiece(Coord{0,4}, new BQueen);
+			//board.SetPiece(Coord{5,3}, new BQueen);
+			//board.SetPiece(Coord{1,7}, new BQueen);
+			board.SetPiece(Coord{2,7}, new BQueen);
 
-			board.SetPice(Coord{1,6}, new WRook);
-			board.SetPice(Coord{2,6}, new WRook);
-			board.SetPice(Coord{3,6}, new WRook);
+			board.SetPiece(Coord{1,6}, new WRook);
+			board.SetPiece(Coord{2,6}, new WRook);
+			board.SetPiece(Coord{3,6}, new WRook);
 
 			board.Refresh();
 			Logger::WriteMessage(board.Mapout().c_str());
@@ -763,7 +763,7 @@ namespace UnitTest_for_Chess
 			Desk board;
 			board.Start();
 
-			board.SetPice(Coord{2,3}, new BkNight);
+			board.SetPiece(Coord{2,3}, new BkNight);
 
 			board.Refresh();
 			Logger::WriteMessage(board.Mapout().c_str());
@@ -773,9 +773,9 @@ namespace UnitTest_for_Chess
 
 			Assert::IsFalse(board.Move(Coord{1,2}, Coord{2,2}), L"King is under the Check");
 
-			board.ErasePice(Coord{1,4});
+			board.ErasePiece(Coord{1,4});
 
-			board.SetPice(Coord{5,4}, new BRook);
+			board.SetPiece(Coord{5,4}, new BRook);
 
 			Assert::IsTrue(board.Checkmate(Coord{0,4}), L"No Escape");
 
@@ -790,9 +790,9 @@ namespace UnitTest_for_Chess
 			Desk board;
 
 
-			board.SetPice(Coord{1,2}, new WPawn);
+			board.SetPiece(Coord{1,2}, new WPawn);
 
-			board.SetPice(Coord{2,2}, new BPawn);
+			board.SetPiece(Coord{2,2}, new BPawn);
 
 
 			board.Refresh();
